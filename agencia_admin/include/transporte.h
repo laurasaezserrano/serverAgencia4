@@ -3,14 +3,21 @@
 
 #include "sqlite3.h"
 
+/*
+ * Estructura Transporte con campos de texto como punteros dinamicos.
+ * Usar transporte_free() para liberar la memoria.
+ */
 typedef struct {
-    char codigo[10];
-    char tipo[20];
-    char fecha_salida[11];
-    char fecha_llegada[11];
-    int  cod_paquete;
-    int  activo;
+    char *codigo;
+    char *tipo;
+    char *fecha_salida;
+    char *fecha_llegada;
+    int   cod_paquete;
+    int   activo;
 } Transporte;
+
+/* Libera todos los campos dinamicos de un Transporte. */
+void transporte_free(Transporte *t);
 
 void altaTransporte(sqlite3 *db);
 void bajaTransporte(void);
@@ -19,4 +26,4 @@ void asociarTransporte(void);
 void listadoTransportes(void);
 void menuTransporte(sqlite3 *db);
 
-#endif
+#endif /* TRANSPORTE_H_ */

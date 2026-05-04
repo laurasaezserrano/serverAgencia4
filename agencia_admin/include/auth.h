@@ -3,7 +3,6 @@
 
 #include "sqlite3.h"
 
-// Definición de estructura
 typedef struct {
     char usuario[50];
     int nivel_permiso;
@@ -11,6 +10,6 @@ typedef struct {
 
 int login_admin(sqlite3 *db);
 void registrar_usuario(sqlite3 *db);
-int verificar_credenciales(sqlite3 *db, const char *user, const char *pass);
+int verificar_credenciales_rol(sqlite3 *db, const char *user, const char *pass);
 
 #endif /* AUTH_H_ */

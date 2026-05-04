@@ -8,12 +8,12 @@
  * Usar alojamiento_free() para liberar la memoria.
  */
 typedef struct {
-    char *codigo;
-    char *nombre;
-    char *direccion;
-    char *tipo;
-    char *cod_ciudad;
-    int   activo;
+    char codigo[10];    // ← array fijo, NO char*
+    char nombre[50];
+    char direccion[100];
+    char tipo[20];
+    char cod_ciudad[10];
+    int  activo;
 } Alojamiento;
 
 /* Libera todos los campos dinamicos de un Alojamiento. */

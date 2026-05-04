@@ -1,6 +1,8 @@
 #include <stdio.h>
+#include <string.h>
 #include "../include/sqlite3.h"
 #include "../include/db.h"
+#include "../include/hash.h"
 
 int db_abrir(sqlite3 **db, const char *ruta) {
     if (sqlite3_open(ruta, db) != SQLITE_OK) {
@@ -23,8 +25,8 @@ int db_crear_tablas(sqlite3 *db) {
         "CREATE TABLE IF NOT EXISTS usuarios ("
         "id INTEGER PRIMARY KEY AUTOINCREMENT, "
         "username TEXT NOT NULL UNIQUE, "
-        "password TEXT NOT NULL, "
-        "rol TEXT NOT NULL" // 'ADMIN' o 'CLIENTE'
+        "password TEXT NOT NULL, "   /* almacena el hash SHA-256 en hex */
+        "rol TEXT NOT NULL"          /* 'ADMIN' o 'CLIENTE' */
         ");";
 
     const char *sql_clientes =
@@ -72,42 +74,57 @@ int db_crear_tablas(sqlite3 *db) {
         "FOREIGN KEY(id_paquete) REFERENCES paquetes(codigo)"
         ");";
 
-    // INSERTAR ADMIN (Si no existe)
-    const char *sql_insert_admin =
-        "INSERT OR IGNORE INTO usuarios (username, password, rol) "
-        "VALUES ('admin', '1234', 'ADMIN');";
-
-    // EJECUCIÓN DE TABLAS
+    /* Crear tablas */
     if (sqlite3_exec(db, sql_usuarios, 0, 0, &err) != SQLITE_OK) {
         printf("Error SQL al crear usuarios: %s\n", err);
         sqlite3_free(err); return 1;
     }
-
     if (sqlite3_exec(db, sql_clientes, 0, 0, &err) != SQLITE_OK) {
         printf("Error SQL al crear clientes: %s\n", err);
         sqlite3_free(err); return 1;
     }
-
     if (sqlite3_exec(db, sql_alojamientos, 0, 0, &err) != SQLITE_OK) {
         printf("Error SQL al crear alojamientos: %s\n", err);
         sqlite3_free(err); return 1;
     }
-
     if (sqlite3_exec(db, sql_paquetes, 0, 0, &err) != SQLITE_OK) {
         printf("Error SQL al crear paquetes: %s\n", err);
         sqlite3_free(err); return 1;
     }
-
     if (sqlite3_exec(db, sql_transportes, 0, 0, &err) != SQLITE_OK) {
         printf("Error SQL al crear transportes: %s\n", err);
         sqlite3_free(err); return 1;
     }
 
-    // EJECUCIÓN INSERT ADMIN
-    if (sqlite3_exec(db, sql_insert_admin, 0, 0, &err) != SQLITE_OK) {
-        printf("Error SQL al insertar admin: %s\n", err);
-        sqlite3_free(err); return 1;
+    /*
+     * Insertar usuario admin por defecto si no existe.
+     * La contrasena se guarda hasheada: SHA-256("1234").
+     * Si se cambia la contrasena por defecto en config.ini,
+     * actualizar tambien el hash aqui o gestionarlo en el arranque.
+     */
+    char hash_admin[65];
+    sha256_hex("1234", hash_admin);
+
+    /* Usamos un prepared statement para insertar el hash de forma segura */
+    sqlite3_stmt *stmt = NULL;
+    const char *sql_insert_admin =
+        "INSERT OR IGNORE INTO usuarios (username, password, rol) "
+        "VALUES (?, ?, 'ADMIN');";
+
+    if (sqlite3_prepare_v2(db, sql_insert_admin, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error preparando INSERT admin: %s\n", sqlite3_errmsg(db));
+        return 1;
     }
 
+    sqlite3_bind_text(stmt, 1, "admin",      -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, hash_admin,   -1, SQLITE_STATIC);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        printf("Error insertando admin: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        return 1;
+    }
+
+    sqlite3_finalize(stmt);
     return 0;
 }

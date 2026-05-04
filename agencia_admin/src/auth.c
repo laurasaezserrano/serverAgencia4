@@ -2,6 +2,7 @@
 #include <string.h>
 #include "../include/auth.h"
 #include "../include/sqlite3.h"
+#include "../include/hash.h"
 
 static void limpiar_buffer_auth() {
     int c;

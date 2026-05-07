@@ -1,0 +1,13 @@
+/*
+ * log.h
+ *
+ *  Created on: 2 abr 2026
+ *      Author: zaira.diez
+ */
+
+#ifndef LOG_H_
+#define LOG_H_
+
+
+
+#endif /* LOG_H_ */

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <time.h>
-#include "include/log.h"
+#include "../include/log.h"
 
 static FILE *log_file = NULL;
 

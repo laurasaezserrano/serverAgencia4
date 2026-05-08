@@ -14,7 +14,7 @@ int cargar_config(const char *ruta, Config *cfg) {
     }
 
     memset(cfg, 0, sizeof(Config));
-    cfg->server_port = 8080; /* default port */
+    cfg->server_port = 8080; //default port
     char linea[256];
 
     while (fgets(linea, sizeof(linea), f)) {

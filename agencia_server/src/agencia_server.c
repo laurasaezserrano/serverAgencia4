@@ -126,7 +126,7 @@ int main(void) {
     memset(&addr, 0, sizeof(addr));
     addr.sin_family      = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;   /* acepta conexiones de cualquier IP */
-    addr.sin_port        = htons((unsigned short)cfg.port);
+    addr.sin_port        = htons((unsigned short)cfg.server_port);
 
     if (bind(srv, (struct sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR) {
         log_escribir("ERROR: bind fallido (puerto en uso?)");
@@ -141,7 +141,7 @@ int main(void) {
     listen(srv, 1);   /* cola de 1: solo atendemos un cliente a la vez */
 
     char msg_listen[128];
-    sprintf(msg_listen, "Escuchando en puerto %d... (esperando cliente)", cfg.port);
+    sprintf(msg_listen, "Escuchando en puerto %d... (esperando cliente)", cfg.server_port);
     log_escribir(msg_listen);
 
     /* ── 8. Accept — bloqueante hasta que conecte el cliente ─── */

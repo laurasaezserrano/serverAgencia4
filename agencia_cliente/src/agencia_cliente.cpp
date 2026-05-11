@@ -337,7 +337,6 @@ public:
                 break;
 
             if (resp.find("OK|") != string::npos) {
-                resp.erase(resp.find('#'));
 
                 vector<string> t = split(resp, '|');
 
@@ -448,7 +447,6 @@ public:
                 break;
 
             if (resp.find("OK|") != string::npos) {
-                resp.erase(resp.find('#'));
 
                 vector<string> t = split(resp, '|');
 
@@ -600,7 +598,6 @@ public:
                 break;
 
             if (resp.find("OK|") != string::npos) {
-                resp.erase(resp.find('#'));
 
                 vector<string> t = split(resp, '|');
 

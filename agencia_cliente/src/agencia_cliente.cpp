@@ -1,21 +1,3 @@
-/*
- * agencia_cliente.cpp
- * ===================
- * Cliente TCP para la Agencia de Viajes — Fase 2.
- *
- * Requisitos cubiertos:
- *  2.1 ConexionServidor -> encapsula socket TCP.
- *  2.2 Clases dominio -> Cliente, Paquete, Reserva.
- *  2.3 Cache en memoria -> vectors y maps.
- *  2.4 Menu jerarquico reutilizable.
- *  2.5 Informes recibidos del servidor.
- *
- * Plataforma: Windows + Winsock2
- *
- * Compilacion:
- * g++ agencia_cliente.cpp -o agencia_cliente.exe -lws2_32
- */
-
 #include <winsock2.h>
 #include <ws2tcpip.h>
 

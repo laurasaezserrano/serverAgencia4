@@ -14,8 +14,6 @@
  * El caracter '#' marca el fin de cada mensaje.
  * El separador de campos es '|'.
  *
- * IMPORTANTE: Ambos proyectos deben incluir este mismo fichero
- * para garantizar que usan los mismos codigos y el mismo buffer.
  */
 
 /* ── Configuracion de red ─────────────────────────────────────── */
@@ -47,9 +45,13 @@
 /* Alojamientos */
 #define OP_LIST_ALO     "LAL"   /* LAL|#                                       */
 #define OP_GET_ALO      "GAL"   /* GAL|codigo|#                                */
+#define OP_ALTA_ALO     "AAL"   /* AAL|cod|nombre|dir|tipo|cod_ciudad|#        */
+#define OP_BAJA_ALO     "BAL"   /* BAL|codigo|#                                */
 
 /* Transportes */
 #define OP_LIST_TRP     "LTR"   /* LTR|#                                       */
+#define OP_ALTA_TRP     "ATR"   /* ATR|cod|tipo|f_salida|f_llegada|id_paquete|# */
+#define OP_BAJA_TRP     "BTR"   /* BTR|codigo|#                                */
 
 /* Reservas */
 #define OP_ALTA_RES     "ARE"   /* ARE|dni_cliente|cod_paquete|fecha|#         */

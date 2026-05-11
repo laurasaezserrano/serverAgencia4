@@ -57,7 +57,12 @@ static void   handle_GPQ(SOCKET s, sqlite3 *db, char *params);
 static void   handle_APQ(SOCKET s, sqlite3 *db, char *params);
 static void   handle_BPQ(SOCKET s, sqlite3 *db, char *params);
 static void   handle_LAL(SOCKET s, sqlite3 *db);
+static void   handle_GAL(SOCKET s, sqlite3 *db, char *params);
+static void   handle_AAL(SOCKET s, sqlite3 *db, char *params);
+static void   handle_BAL(SOCKET s, sqlite3 *db, char *params);
 static void   handle_LTR(SOCKET s, sqlite3 *db);
+static void   handle_ATR(SOCKET s, sqlite3 *db, char *params);
+static void   handle_BTR(SOCKET s, sqlite3 *db, char *params);
 static void   handle_ARE(SOCKET s, sqlite3 *db, char *params);
 static void   handle_BRE(SOCKET s, sqlite3 *db, char *params);
 static void   handle_LRC(SOCKET s, sqlite3 *db, char *params);
@@ -224,8 +229,9 @@ static void procesar_trama(SOCKET cliente, sqlite3 *db, const char *trama) {
     strncpy(copia, trama, sizeof(copia) - 1);
     copia[sizeof(copia) - 1] = '\0';
 
-    char *op = strtok(copia, "|");
-    char *params = copia + strlen(op) + 1;
+    /* Extraer el codigo de operacion (primeros 3 caracteres antes de '|') */
+    char *op     = siguiente_token(copia);
+    char *params = siguiente_token(NULL);   /* resto de parametros */
 
     if (!op) {
         enviar_respuesta(cliente, "ERR|Trama vacia|#");
@@ -249,7 +255,12 @@ static void procesar_trama(SOCKET cliente, sqlite3 *db, const char *trama) {
     else if (strcmp(op, OP_ALTA_PQT) == 0) handle_APQ(cliente, db, params);
     else if (strcmp(op, OP_BAJA_PQT) == 0) handle_BPQ(cliente, db, params);
     else if (strcmp(op, OP_LIST_ALO) == 0) handle_LAL(cliente, db);
+    else if (strcmp(op, OP_GET_ALO)  == 0) handle_GAL(cliente, db, params);
+    else if (strcmp(op, OP_ALTA_ALO) == 0) handle_AAL(cliente, db, params);
+    else if (strcmp(op, OP_BAJA_ALO) == 0) handle_BAL(cliente, db, params);
     else if (strcmp(op, OP_LIST_TRP) == 0) handle_LTR(cliente, db);
+    else if (strcmp(op, OP_ALTA_TRP) == 0) handle_ATR(cliente, db, params);
+    else if (strcmp(op, OP_BAJA_TRP) == 0) handle_BTR(cliente, db, params);
     else if (strcmp(op, OP_ALTA_RES) == 0) handle_ARE(cliente, db, params);
     else if (strcmp(op, OP_BAJA_RES) == 0) handle_BRE(cliente, db, params);
     else if (strcmp(op, OP_LIST_RES_CLI) == 0) handle_LRC(cliente, db, params);
@@ -289,8 +300,8 @@ static void handle_LOG(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, usuario,    -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, hash_clave, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, usuario,    -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, hash_clave, -1, SQLITE_STATIC);
 
     char resp[PROTO_BUF];
     if (sqlite3_step(stmt) == SQLITE_ROW) {
@@ -314,7 +325,7 @@ static void handle_ACL(SOCKET s, sqlite3 *db, char *params) {
     char *email     = siguiente_token(NULL);
     char *fnac      = siguiente_token(NULL);
 
-    if (!dni || !nombre || !apellidos || !tlf || !email || !fnac) {
+    if (!nombre || !apellidos || !tlf || !email || !fnac) {
         enviar_respuesta(s, "ERR|Faltan campos del cliente|#");
         return;
     }
@@ -327,12 +338,12 @@ static void handle_ACL(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, dni,       -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, nombre,    -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 3, apellidos, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 4, tlf,       -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 5, email,     -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 6, fnac,      -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, dni,       -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, nombre,    -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, apellidos, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 4, tlf,       -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 5, email,     -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 6, fnac,      -1, SQLITE_STATIC);
 
     if (sqlite3_step(stmt) == SQLITE_DONE) {
         enviar_respuesta(s, "OK|Cliente dado de alta|#");
@@ -353,7 +364,7 @@ static void handle_BCL(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_STATIC);
     sqlite3_step(stmt);
     int cambios = sqlite3_changes(db);
     sqlite3_finalize(stmt);
@@ -389,12 +400,12 @@ static void handle_MCL(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, nombre,    -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 2, apellidos, -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 3, tlf,       -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 4, email,     -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 5, fnac,      -1, SQLITE_TRANSIENT);
-    sqlite3_bind_text(stmt, 6, dni,       -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, nombre,    -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, apellidos, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, tlf,       -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 4, email,     -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 5, fnac,      -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 6, dni,       -1, SQLITE_STATIC);
 
     sqlite3_step(stmt);
     int cambios = sqlite3_changes(db);
@@ -419,18 +430,18 @@ static void handle_GCL(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_STATIC);
 
     char resp[PROTO_BUF];
     if (sqlite3_step(stmt) == SQLITE_ROW) {
-    	sprintf(resp, "OK|%d|%s|%s|%s|%s|%s|%s|#",
-    	    sqlite3_column_int(stmt, 0),
-    	    (const char*)sqlite3_column_text(stmt, 1),
-    	    (const char*)sqlite3_column_text(stmt, 2),
-    	    (const char*)sqlite3_column_text(stmt, 3),
-    	    (const char*)sqlite3_column_text(stmt, 4),
-    	    (const char*)sqlite3_column_text(stmt, 5),
-    	    (const char*)sqlite3_column_text(stmt, 6));
+        sprintf(resp, "OK|%d|%s|%s|%s|%s|%s|%s|#",
+            sqlite3_column_int(stmt, 0),
+            sqlite3_column_text(stmt, 1),
+            sqlite3_column_text(stmt, 2),
+            sqlite3_column_text(stmt, 3),
+            sqlite3_column_text(stmt, 4),
+            sqlite3_column_text(stmt, 5),
+            sqlite3_column_text(stmt, 6));
     } else {
         strcpy(resp, "ERR|Cliente no encontrado|#");
     }
@@ -454,13 +465,13 @@ static void handle_LCL(SOCKET s, sqlite3 *db) {
     char fila[PROTO_BUF];
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         sprintf(fila, "OK|%d|%s|%s|%s|%s|%s|%s|#",
-        		sqlite3_column_int(stmt, 0),
-        		(const char*)sqlite3_column_text(stmt, 1),
-           	    (const char*)sqlite3_column_text(stmt, 2),
-           	    (const char*)sqlite3_column_text(stmt, 3),
-           	    (const char*)sqlite3_column_text(stmt, 4),
-           	    (const char*)sqlite3_column_text(stmt, 5),
-           	    (const char*)sqlite3_column_text(stmt, 6));
+            sqlite3_column_int(stmt, 0),
+            sqlite3_column_text(stmt, 1),
+            sqlite3_column_text(stmt, 2),
+            sqlite3_column_text(stmt, 3),
+            sqlite3_column_text(stmt, 4),
+            sqlite3_column_text(stmt, 5),
+            sqlite3_column_text(stmt, 6));
         enviar_respuesta(s, fila);
     }
     sqlite3_finalize(stmt);
@@ -484,10 +495,10 @@ static void handle_LPQ(SOCKET s, sqlite3 *db) {
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         sprintf(fila, "OK|%d|%s|%.2f|%s|%s|%d|%d|#",
             sqlite3_column_int(stmt, 0),
-			(const char*)sqlite3_column_text(stmt, 1),
+            sqlite3_column_text(stmt, 1),
             sqlite3_column_double(stmt, 2),
-			(const char*)sqlite3_column_text(stmt, 3),
-			(const char*)sqlite3_column_text(stmt, 4),
+            sqlite3_column_text(stmt, 3),
+            sqlite3_column_text(stmt, 4),
             sqlite3_column_int(stmt, 5),
             sqlite3_column_int(stmt, 6));
         enviar_respuesta(s, fila);
@@ -514,10 +525,10 @@ static void handle_GPQ(SOCKET s, sqlite3 *db, char *params) {
     if (sqlite3_step(stmt) == SQLITE_ROW) {
         sprintf(resp, "OK|%d|%s|%.2f|%s|%s|%d|%d|#",
             sqlite3_column_int(stmt, 0),
-			(const char*)sqlite3_column_text(stmt, 1),
+            sqlite3_column_text(stmt, 1),
             sqlite3_column_double(stmt, 2),
-			(const char*)sqlite3_column_text(stmt, 3),
-			(const char*)sqlite3_column_text(stmt, 4),
+            sqlite3_column_text(stmt, 3),
+            sqlite3_column_text(stmt, 4),
             sqlite3_column_int(stmt, 5),
             sqlite3_column_int(stmt, 6));
     } else {
@@ -554,10 +565,10 @@ static void handle_APQ(SOCKET s, sqlite3 *db, char *params) {
     int    plz = atoi(plazas);
     double prc = atof(precio);
     sqlite3_bind_int(stmt,    1, atoi(cod));
-    (const char*)sqlite3_bind_text(stmt,   2, nombre,  -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt,   2, nombre,  -1, SQLITE_STATIC);
     sqlite3_bind_double(stmt, 3, prc);
-    (const char*)sqlite3_bind_text(stmt,   4, origen,  -1, SQLITE_TRANSIENT);
-    (const char*)sqlite3_bind_text(stmt,   5, destino, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt,   4, origen,  -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt,   5, destino, -1, SQLITE_STATIC);
     sqlite3_bind_int(stmt,    6, plz);
     sqlite3_bind_int(stmt,    7, plz);
 
@@ -602,15 +613,105 @@ static void handle_LAL(SOCKET s, sqlite3 *db) {
     char fila[PROTO_BUF];
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         sprintf(fila, "OK|%s|%s|%s|%s|%s|#",
-        	(const char*)sqlite3_column_text(stmt, 0),
-			(const char*)sqlite3_column_text(stmt, 1),
-			(const char*)sqlite3_column_text(stmt, 2),
-			(const char*)sqlite3_column_text(stmt, 3),
-			(const char*)sqlite3_column_text(stmt, 4));
+            sqlite3_column_text(stmt, 0),
+            sqlite3_column_text(stmt, 1),
+            sqlite3_column_text(stmt, 2),
+            sqlite3_column_text(stmt, 3),
+            sqlite3_column_text(stmt, 4));
         enviar_respuesta(s, fila);
     }
     sqlite3_finalize(stmt);
     enviar_respuesta(s, "LST_END|#");
+}
+
+/* GAL|codigo|  ->  OK|cod|nombre|dir|tipo|ciudad|# */
+static void handle_GAL(SOCKET s, sqlite3 *db, char *params) {
+    if (!params) { enviar_respuesta(s, "ERR|Codigo requerido|#"); return; }
+
+    const char *sql =
+        "SELECT codigo,nombre,direccion,tipo,cod_ciudad"
+        " FROM alojamientos WHERE codigo=? AND activo=1;";
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        enviar_respuesta(s, "ERR|Error interno BD|#");
+        return;
+    }
+    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_STATIC);
+
+    char resp[PROTO_BUF];
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        sprintf(resp, "OK|%s|%s|%s|%s|%s|#",
+            sqlite3_column_text(stmt, 0),
+            sqlite3_column_text(stmt, 1),
+            sqlite3_column_text(stmt, 2),
+            sqlite3_column_text(stmt, 3),
+            sqlite3_column_text(stmt, 4));
+    } else {
+        strcpy(resp, "ERR|Alojamiento no encontrado|#");
+    }
+    sqlite3_finalize(stmt);
+    enviar_respuesta(s, resp);
+}
+
+/* AAL|cod|nombre|dir|tipo|cod_ciudad|  ->  OK|Alojamiento dado de alta|# */
+static void handle_AAL(SOCKET s, sqlite3 *db, char *params) {
+    if (!params) { enviar_respuesta(s, "ERR|Parametros insuficientes|#"); return; }
+
+    char *cod      = params;
+    char *nombre   = siguiente_token(NULL);
+    char *dir      = siguiente_token(NULL);
+    char *tipo     = siguiente_token(NULL);
+    char *cod_city = siguiente_token(NULL);
+
+    if (!nombre || !dir || !tipo || !cod_city) {
+        enviar_respuesta(s, "ERR|Faltan campos del alojamiento|#");
+        return;
+    }
+
+    const char *sql =
+        "INSERT INTO alojamientos (codigo,nombre,direccion,tipo,cod_ciudad,activo)"
+        " VALUES (?,?,?,?,?,1);";
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        enviar_respuesta(s, "ERR|Error interno BD|#");
+        return;
+    }
+    sqlite3_bind_text(stmt, 1, cod,      -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, nombre,   -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, dir,      -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 4, tipo,     -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 5, cod_city, -1, SQLITE_STATIC);
+
+    if (sqlite3_step(stmt) == SQLITE_DONE) {
+        enviar_respuesta(s, "OK|Alojamiento dado de alta|#");
+        log_escribir("Alta de alojamiento OK");
+    } else {
+        enviar_respuesta(s, "ERR|Codigo ya existe o error BD|#");
+    }
+    sqlite3_finalize(stmt);
+}
+
+/* BAL|codigo|  ->  OK|Alojamiento dado de baja|# */
+static void handle_BAL(SOCKET s, sqlite3 *db, char *params) {
+    if (!params) { enviar_respuesta(s, "ERR|Codigo requerido|#"); return; }
+
+    const char *sql = "UPDATE alojamientos SET activo=0 WHERE codigo=? AND activo=1;";
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        enviar_respuesta(s, "ERR|Error interno BD|#");
+        return;
+    }
+    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_STATIC);
+    sqlite3_step(stmt);
+    int cambios = sqlite3_changes(db);
+    sqlite3_finalize(stmt);
+
+    if (cambios > 0) {
+        enviar_respuesta(s, "OK|Alojamiento dado de baja|#");
+        log_escribir("Baja de alojamiento OK");
+    } else {
+        enviar_respuesta(s, "ERR|Alojamiento no encontrado o ya de baja|#");
+    }
 }
 
 /* LTR|  ->  LST_BEGIN + filas de transportes + LST_END */
@@ -628,15 +729,76 @@ static void handle_LTR(SOCKET s, sqlite3 *db) {
     char fila[PROTO_BUF];
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         sprintf(fila, "OK|%s|%s|%s|%s|%d|#",
-        	(const char*)sqlite3_column_text(stmt, 0),
-			(const char*)sqlite3_column_text(stmt, 1),
-			(const char*)sqlite3_column_text(stmt, 2),
-			(const char*)sqlite3_column_text(stmt, 3),
+            sqlite3_column_text(stmt, 0),
+            sqlite3_column_text(stmt, 1),
+            sqlite3_column_text(stmt, 2),
+            sqlite3_column_text(stmt, 3),
             sqlite3_column_int(stmt, 4));
         enviar_respuesta(s, fila);
     }
     sqlite3_finalize(stmt);
     enviar_respuesta(s, "LST_END|#");
+}
+
+/* ATR|cod|tipo|f_salida|f_llegada|id_paquete|  ->  OK|Transporte dado de alta|# */
+static void handle_ATR(SOCKET s, sqlite3 *db, char *params) {
+    if (!params) { enviar_respuesta(s, "ERR|Parametros insuficientes|#"); return; }
+
+    char *cod        = params;
+    char *tipo       = siguiente_token(NULL);
+    char *f_salida   = siguiente_token(NULL);
+    char *f_llegada  = siguiente_token(NULL);
+    char *id_paquete = siguiente_token(NULL);
+
+    if (!tipo || !f_salida || !f_llegada || !id_paquete) {
+        enviar_respuesta(s, "ERR|Faltan campos del transporte|#");
+        return;
+    }
+
+    const char *sql =
+        "INSERT INTO transportes (codigo,tipo,fecha_salida,fecha_llegada,id_paquete,activo)"
+        " VALUES (?,?,?,?,?,1);";
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        enviar_respuesta(s, "ERR|Error interno BD|#");
+        return;
+    }
+    sqlite3_bind_text(stmt, 1, cod,        -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, tipo,       -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, f_salida,   -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 4, f_llegada,  -1, SQLITE_STATIC);
+    sqlite3_bind_int (stmt, 5, atoi(id_paquete));
+
+    if (sqlite3_step(stmt) == SQLITE_DONE) {
+        enviar_respuesta(s, "OK|Transporte dado de alta|#");
+        log_escribir("Alta de transporte OK");
+    } else {
+        enviar_respuesta(s, "ERR|Codigo ya existe o error BD|#");
+    }
+    sqlite3_finalize(stmt);
+}
+
+/* BTR|codigo|  ->  OK|Transporte dado de baja|# */
+static void handle_BTR(SOCKET s, sqlite3 *db, char *params) {
+    if (!params) { enviar_respuesta(s, "ERR|Codigo requerido|#"); return; }
+
+    const char *sql = "UPDATE transportes SET activo=0 WHERE codigo=? AND activo=1;";
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        enviar_respuesta(s, "ERR|Error interno BD|#");
+        return;
+    }
+    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_STATIC);
+    sqlite3_step(stmt);
+    int cambios = sqlite3_changes(db);
+    sqlite3_finalize(stmt);
+
+    if (cambios > 0) {
+        enviar_respuesta(s, "OK|Transporte dado de baja|#");
+        log_escribir("Baja de transporte OK");
+    } else {
+        enviar_respuesta(s, "ERR|Transporte no encontrado o ya de baja|#");
+    }
 }
 
 /* ARE|dni_cliente|cod_paquete|fecha|  ->  OK|Reserva creada|id|# */
@@ -682,9 +844,9 @@ static void handle_ARE(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    (const char*)sqlite3_bind_text(stmt, 1, dni,     -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, dni,     -1, SQLITE_STATIC);
     sqlite3_bind_int(stmt,  2, atoi(cod_pqt));
-    (const char*)sqlite3_bind_text(stmt, 3, fecha,   -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, fecha,   -1, SQLITE_STATIC);
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
         sqlite3_finalize(stmt);
@@ -694,6 +856,7 @@ static void handle_ARE(SOCKET s, sqlite3 *db, char *params) {
     long long id_reserva = sqlite3_last_insert_rowid(db);
     sqlite3_finalize(stmt);
 
+    /* Decrementar plazas disponibles — una sola vez con sprintf+exec */
     char sql_upd[256];
     sprintf(sql_upd,
         "UPDATE paquetes SET plazas_disponibles = plazas_disponibles - 1 WHERE codigo = %d;",
@@ -701,7 +864,7 @@ static void handle_ARE(SOCKET s, sqlite3 *db, char *params) {
     sqlite3_exec(db, sql_upd, 0, 0, NULL);
 
     char resp[PROTO_BUF];
-    sprintf(resp, "OK|Reserva creada|%lld|#", (int)id_reserva);
+    sprintf(resp, "OK|Reserva creada|%d|#", (int)id_reserva);
     enviar_respuesta(s, resp);
     log_escribir("Reserva creada OK");
 }
@@ -756,7 +919,7 @@ static void handle_LRC(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    (const char*)sqlite3_bind_text(stmt, 1, params, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_STATIC);
 
     enviar_respuesta(s, "LST_BEGIN|#");
     char fila[PROTO_BUF];
@@ -764,12 +927,8 @@ static void handle_LRC(SOCKET s, sqlite3 *db, char *params) {
         sprintf(fila, "OK|%d|%d|%s|%s|#",
             sqlite3_column_int(stmt, 0),
             sqlite3_column_int(stmt, 1),
-//			TODO: HACER ESTO CON TODOS LOS sqlite3_column_text
-//			const char *txt = (const char*)sqlite3_column_text(stmt, X);
-//			if (!txt)
-//			    txt = "";
-			(const char*)sqlite3_column_text(stmt, 2),
-			(const char*)sqlite3_column_text(stmt, 3));
+            sqlite3_column_text(stmt, 2),
+            sqlite3_column_text(stmt, 3));
         enviar_respuesta(s, fila);
     }
     sqlite3_finalize(stmt);
@@ -794,7 +953,7 @@ static void handle_IOC(SOCKET s, sqlite3 *db) {
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         sprintf(fila, "OK|%d|%s|%d|%d|#",
             sqlite3_column_int(stmt, 0),
-			(const char*)sqlite3_column_text(stmt, 1),
+            sqlite3_column_text(stmt, 1),
             sqlite3_column_int(stmt, 2),
             sqlite3_column_int(stmt, 3));
         enviar_respuesta(s, fila);
@@ -821,8 +980,8 @@ static void handle_IRK(SOCKET s, sqlite3 *db) {
     char fila[PROTO_BUF];
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         sprintf(fila, "OK|%s|%s|%d|#",
-        	(const char*)sqlite3_column_text(stmt, 0),
-			(const char*)sqlite3_column_text(stmt, 1),
+            sqlite3_column_text(stmt, 0),
+            sqlite3_column_text(stmt, 1),
             sqlite3_column_int(stmt, 2));
         enviar_respuesta(s, fila);
     }

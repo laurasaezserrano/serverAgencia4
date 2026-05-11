@@ -1,8 +1,7 @@
-
 /*
  * agencia_cliente.cpp
  * ===================
- * Cliente TCP para la Agencia de Viajes — Fase 2
+ * Cliente TCP para la Agencia de Viajes — Fase 2.
  *
  * Requisitos cubiertos:
  *  2.1 ConexionServidor -> encapsula socket TCP.

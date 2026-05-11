@@ -224,9 +224,8 @@ static void procesar_trama(SOCKET cliente, sqlite3 *db, const char *trama) {
     strncpy(copia, trama, sizeof(copia) - 1);
     copia[sizeof(copia) - 1] = '\0';
 
-    /* Extraer el codigo de operacion (primeros 3 caracteres antes de '|') */
-    char *op     = siguiente_token(copia);
-    char *params = siguiente_token(NULL);   /* resto de parametros */
+    char *op = strtok(copia, "|");
+    char *params = copia + strlen(op) + 1;
 
     if (!op) {
         enviar_respuesta(cliente, "ERR|Trama vacia|#");
@@ -695,7 +694,7 @@ static void handle_ARE(SOCKET s, sqlite3 *db, char *params) {
     long long id_reserva = sqlite3_last_insert_rowid(db);
     sqlite3_finalize(stmt);
 
-
+    char sql_upd[256];
     sprintf(sql_upd,
         "UPDATE paquetes SET plazas_disponibles = plazas_disponibles - 1 WHERE codigo = %d;",
         atoi(cod_pqt));

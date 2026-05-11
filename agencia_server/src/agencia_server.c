@@ -424,14 +424,14 @@ static void handle_GCL(SOCKET s, sqlite3 *db, char *params) {
 
     char resp[PROTO_BUF];
     if (sqlite3_step(stmt) == SQLITE_ROW) {
-        sprintf(resp, "OK|%d|%s|%s|%s|%s|%s|%s|#",
-            sqlite3_column_int(stmt, 0),
-            sqlite3_column_text(stmt, 1),
-            sqlite3_column_text(stmt, 2),
-            sqlite3_column_text(stmt, 3),
-            sqlite3_column_text(stmt, 4),
-            sqlite3_column_text(stmt, 5),
-            sqlite3_column_text(stmt, 6));
+    	sprintf(resp, "OK|%d|%s|%s|%s|%s|%s|%s|#",
+    	    sqlite3_column_int(stmt, 0),
+    	    (const char*)sqlite3_column_text(stmt, 1),
+    	    (const char*)sqlite3_column_text(stmt, 2),
+    	    (const char*)sqlite3_column_text(stmt, 3),
+    	    (const char*)sqlite3_column_text(stmt, 4),
+    	    (const char*)sqlite3_column_text(stmt, 5),
+    	    (const char*)sqlite3_column_text(stmt, 6));
     } else {
         strcpy(resp, "ERR|Cliente no encontrado|#");
     }
@@ -455,13 +455,13 @@ static void handle_LCL(SOCKET s, sqlite3 *db) {
     char fila[PROTO_BUF];
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         sprintf(fila, "OK|%d|%s|%s|%s|%s|%s|%s|#",
-            sqlite3_column_int(stmt, 0),
-            sqlite3_column_text(stmt, 1),
-            sqlite3_column_text(stmt, 2),
-            sqlite3_column_text(stmt, 3),
-            sqlite3_column_text(stmt, 4),
-            sqlite3_column_text(stmt, 5),
-            sqlite3_column_text(stmt, 6));
+        		sqlite3_column_int(stmt, 0),
+        		(const char*)sqlite3_column_text(stmt, 1),
+           	    (const char*)sqlite3_column_text(stmt, 2),
+           	    (const char*)sqlite3_column_text(stmt, 3),
+           	    (const char*)sqlite3_column_text(stmt, 4),
+           	    (const char*)sqlite3_column_text(stmt, 5),
+           	    (const char*)sqlite3_column_text(stmt, 6));
         enviar_respuesta(s, fila);
     }
     sqlite3_finalize(stmt);
@@ -485,10 +485,10 @@ static void handle_LPQ(SOCKET s, sqlite3 *db) {
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         sprintf(fila, "OK|%d|%s|%.2f|%s|%s|%d|%d|#",
             sqlite3_column_int(stmt, 0),
-            sqlite3_column_text(stmt, 1),
+			(const char*)sqlite3_column_text(stmt, 1),
             sqlite3_column_double(stmt, 2),
-            sqlite3_column_text(stmt, 3),
-            sqlite3_column_text(stmt, 4),
+			(const char*)sqlite3_column_text(stmt, 3),
+			(const char*)sqlite3_column_text(stmt, 4),
             sqlite3_column_int(stmt, 5),
             sqlite3_column_int(stmt, 6));
         enviar_respuesta(s, fila);
@@ -515,10 +515,10 @@ static void handle_GPQ(SOCKET s, sqlite3 *db, char *params) {
     if (sqlite3_step(stmt) == SQLITE_ROW) {
         sprintf(resp, "OK|%d|%s|%.2f|%s|%s|%d|%d|#",
             sqlite3_column_int(stmt, 0),
-            sqlite3_column_text(stmt, 1),
+			(const char*)sqlite3_column_text(stmt, 1),
             sqlite3_column_double(stmt, 2),
-            sqlite3_column_text(stmt, 3),
-            sqlite3_column_text(stmt, 4),
+			(const char*)sqlite3_column_text(stmt, 3),
+			(const char*)sqlite3_column_text(stmt, 4),
             sqlite3_column_int(stmt, 5),
             sqlite3_column_int(stmt, 6));
     } else {
@@ -555,10 +555,10 @@ static void handle_APQ(SOCKET s, sqlite3 *db, char *params) {
     int    plz = atoi(plazas);
     double prc = atof(precio);
     sqlite3_bind_int(stmt,    1, atoi(cod));
-    sqlite3_bind_text(stmt,   2, nombre,  -1, SQLITE_STATIC);
+    (const char*)sqlite3_bind_text(stmt,   2, nombre,  -1, SQLITE_STATIC);
     sqlite3_bind_double(stmt, 3, prc);
-    sqlite3_bind_text(stmt,   4, origen,  -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt,   5, destino, -1, SQLITE_STATIC);
+    (const char*)sqlite3_bind_text(stmt,   4, origen,  -1, SQLITE_STATIC);
+    (const char*)sqlite3_bind_text(stmt,   5, destino, -1, SQLITE_STATIC);
     sqlite3_bind_int(stmt,    6, plz);
     sqlite3_bind_int(stmt,    7, plz);
 
@@ -603,11 +603,11 @@ static void handle_LAL(SOCKET s, sqlite3 *db) {
     char fila[PROTO_BUF];
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         sprintf(fila, "OK|%s|%s|%s|%s|%s|#",
-            sqlite3_column_text(stmt, 0),
-            sqlite3_column_text(stmt, 1),
-            sqlite3_column_text(stmt, 2),
-            sqlite3_column_text(stmt, 3),
-            sqlite3_column_text(stmt, 4));
+        	(const char*)sqlite3_column_text(stmt, 0),
+			(const char*)sqlite3_column_text(stmt, 1),
+			(const char*)sqlite3_column_text(stmt, 2),
+			(const char*)sqlite3_column_text(stmt, 3),
+			(const char*)sqlite3_column_text(stmt, 4));
         enviar_respuesta(s, fila);
     }
     sqlite3_finalize(stmt);
@@ -629,10 +629,10 @@ static void handle_LTR(SOCKET s, sqlite3 *db) {
     char fila[PROTO_BUF];
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         sprintf(fila, "OK|%s|%s|%s|%s|%d|#",
-            sqlite3_column_text(stmt, 0),
-            sqlite3_column_text(stmt, 1),
-            sqlite3_column_text(stmt, 2),
-            sqlite3_column_text(stmt, 3),
+        	(const char*)sqlite3_column_text(stmt, 0),
+			(const char*)sqlite3_column_text(stmt, 1),
+			(const char*)sqlite3_column_text(stmt, 2),
+			(const char*)sqlite3_column_text(stmt, 3),
             sqlite3_column_int(stmt, 4));
         enviar_respuesta(s, fila);
     }
@@ -683,9 +683,9 @@ static void handle_ARE(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, dni,     -1, SQLITE_STATIC);
+    (const char*)sqlite3_bind_text(stmt, 1, dni,     -1, SQLITE_STATIC);
     sqlite3_bind_int(stmt,  2, atoi(cod_pqt));
-    sqlite3_bind_text(stmt, 3, fecha,   -1, SQLITE_STATIC);
+    (const char*)sqlite3_bind_text(stmt, 3, fecha,   -1, SQLITE_STATIC);
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
         sqlite3_finalize(stmt);
@@ -695,12 +695,7 @@ static void handle_ARE(SOCKET s, sqlite3 *db, char *params) {
     long long id_reserva = sqlite3_last_insert_rowid(db);
     sqlite3_finalize(stmt);
 
-    /* Decrementar plazas disponibles */
-    sqlite3_exec(db,
-        "UPDATE paquetes SET plazas_disponibles = plazas_disponibles - 1"
-        " WHERE codigo = ?;", 0, 0, NULL);
-    /* Nota: la siguiente llamada correcta necesitaria bind; usamos exec directo con sprintf */
-    char sql_upd[256];
+
     sprintf(sql_upd,
         "UPDATE paquetes SET plazas_disponibles = plazas_disponibles - 1 WHERE codigo = %d;",
         atoi(cod_pqt));
@@ -762,7 +757,7 @@ static void handle_LRC(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_STATIC);
+    (const char*)sqlite3_bind_text(stmt, 1, params, -1, SQLITE_STATIC);
 
     enviar_respuesta(s, "LST_BEGIN|#");
     char fila[PROTO_BUF];
@@ -770,8 +765,8 @@ static void handle_LRC(SOCKET s, sqlite3 *db, char *params) {
         sprintf(fila, "OK|%d|%d|%s|%s|#",
             sqlite3_column_int(stmt, 0),
             sqlite3_column_int(stmt, 1),
-            sqlite3_column_text(stmt, 2),
-            sqlite3_column_text(stmt, 3));
+			(const char*)sqlite3_column_text(stmt, 2),
+			(const char*)sqlite3_column_text(stmt, 3));
         enviar_respuesta(s, fila);
     }
     sqlite3_finalize(stmt);
@@ -796,7 +791,7 @@ static void handle_IOC(SOCKET s, sqlite3 *db) {
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         sprintf(fila, "OK|%d|%s|%d|%d|#",
             sqlite3_column_int(stmt, 0),
-            sqlite3_column_text(stmt, 1),
+			(const char*)sqlite3_column_text(stmt, 1),
             sqlite3_column_int(stmt, 2),
             sqlite3_column_int(stmt, 3));
         enviar_respuesta(s, fila);
@@ -823,8 +818,8 @@ static void handle_IRK(SOCKET s, sqlite3 *db) {
     char fila[PROTO_BUF];
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         sprintf(fila, "OK|%s|%s|%d|#",
-            sqlite3_column_text(stmt, 0),
-            sqlite3_column_text(stmt, 1),
+        	(const char*)sqlite3_column_text(stmt, 0),
+			(const char*)sqlite3_column_text(stmt, 1),
             sqlite3_column_int(stmt, 2));
         enviar_respuesta(s, fila);
     }

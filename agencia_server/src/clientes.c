@@ -140,7 +140,7 @@ int baja_cliente(sqlite3 *db) {
 	    const char *sql_buscar =
 	        "SELECT activo FROM clientes WHERE dni = ?;";
 	    const char *sql_baja =
-	        "DELETE FROM clientes WHERE dni = ?";
+	    	"UPDATE clientes SET activo=0 WHERE dni=?";
 
 	    char dni[16];
 	    int activo = -1;

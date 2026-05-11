@@ -26,5 +26,5 @@ int cargar_config(const char *ruta, Config *cfg) {
     }
 
     fclose(f);
-    return 0;
+    return 1;
 }

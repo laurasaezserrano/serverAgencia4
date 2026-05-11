@@ -6,7 +6,7 @@ typedef struct {
     char admin_pass[50];
     char db_path[256];
     char log_path[256];
-    int  server_port;          /* Puerto TCP del servidor (por defecto 8080) */
+    int  port;          /* Puerto TCP del servidor (por defecto 8080) */
 } Config;
 
 int cargar_config(const char *ruta, Config *cfg);

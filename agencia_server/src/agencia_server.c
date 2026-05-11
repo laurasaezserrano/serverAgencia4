@@ -35,8 +35,10 @@
 #include "../include/transporte.h"
 #include "../include/sqlite3.h"
 
-/* ── Enlace automatico con ws2_32.lib en MinGW ─────────────────── */
-#pragma comment(lib, "ws2_32.lib")
+/* ws2_32 debe enlazarse manualmente en Eclipse:
+ * Project Properties -> C/C++ Build -> Settings
+ * -> MinGW C Linker -> Libraries -> Libraries (-l) -> añadir: ws2_32
+ */
 
 /* ── Prototipos internos ────────────────────────────────────────── */
 static void   procesar_trama(SOCKET cliente, sqlite3 *db, const char *trama);
@@ -126,7 +128,7 @@ int main(void) {
     memset(&addr, 0, sizeof(addr));
     addr.sin_family      = AF_INET;
     addr.sin_addr.s_addr = INADDR_ANY;   /* acepta conexiones de cualquier IP */
-    addr.sin_port        = htons((unsigned short)cfg.server_port);
+    addr.sin_port        = htons((unsigned short)cfg.port);
 
     if (bind(srv, (struct sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR) {
         log_escribir("ERROR: bind fallido (puerto en uso?)");
@@ -141,7 +143,7 @@ int main(void) {
     listen(srv, 1);   /* cola de 1: solo atendemos un cliente a la vez */
 
     char msg_listen[128];
-    sprintf(msg_listen, "Escuchando en puerto %d... (esperando cliente)", cfg.server_port);
+    sprintf(msg_listen, "Escuchando en puerto %d... (esperando cliente)", cfg.port);
     log_escribir(msg_listen);
 
     /* ── 8. Accept — bloqueante hasta que conecte el cliente ─── */
@@ -158,10 +160,9 @@ int main(void) {
     }
 
     /* Obtener IP del cliente para el log */
-    char ip_cli[INET_ADDRSTRLEN];
-    inet_ntop(AF_INET, &addr_cli.sin_addr, ip_cli, sizeof(ip_cli));
+    /* inet_ntoa es compatible con todas las versiones de MinGW */
     char msg_conn[128];
-    sprintf(msg_conn, "Cliente conectado desde %s", ip_cli);
+    sprintf(msg_conn, "Cliente conectado desde %s", inet_ntoa(addr_cli.sin_addr));
     log_escribir(msg_conn);
 
     /* ── 9. Bucle de atencion ────────────────────────────────── */
@@ -713,7 +714,7 @@ static void handle_ARE(SOCKET s, sqlite3 *db, char *params) {
     sqlite3_exec(db, sql_upd, 0, 0, NULL);
 
     char resp[PROTO_BUF];
-    sprintf(resp, "OK|Reserva creada|%lld|#", id_reserva);
+    sprintf(resp, "OK|Reserva creada|%d|#", (int)id_reserva);
     enviar_respuesta(s, resp);
     log_escribir("Reserva creada OK");
 }

@@ -7,7 +7,6 @@
 
 #define MAX_INPUT 256
 
-static void limpiar_buffer(void);
 static void leer_cadena(const char *mensaje, char *buffer, int tam);
 static int leer_entero(const char *mensaje);
 static int validar_dni(const char *dni);
@@ -317,6 +316,7 @@ void listar_clientes(sqlite3 *db) {
    FUNCIONES AUXILIARES PRIVADAS
    ========================================================= */
 
+static void limpiar_buffer(void) __attribute__((unused));
 static void limpiar_buffer(void) {
     int c;
     while ((c = getchar()) != '\n' && c != EOF) { }

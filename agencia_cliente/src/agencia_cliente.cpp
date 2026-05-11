@@ -171,6 +171,7 @@ private:
 
 public:
     ConexionServidor() {
+    	string bufferInterno;
         sock = INVALID_SOCKET;
         conectado = false;
     }
@@ -218,18 +219,32 @@ public:
     }
 
     string recibir() {
-        char buffer[PROTO_BUF];
-        memset(buffer, 0, sizeof(buffer));
 
-        int bytes = recv(sock, buffer, sizeof(buffer) - 1, 0);
+        while (true) {
 
-        if (bytes <= 0) {
-            return "";
+            size_t pos = bufferInterno.find('#');
+
+            if (pos != string::npos) {
+
+                string trama = bufferInterno.substr(0, pos);
+
+                bufferInterno.erase(0, pos + 1);
+
+                return trama;
+            }
+
+            char buffer[PROTO_BUF];
+
+            int bytes = recv(sock, buffer, sizeof(buffer) - 1, 0);
+
+            if (bytes <= 0) {
+                return "";
+            }
+
+            buffer[bytes] = '\0';
+
+            bufferInterno += buffer;
         }
-
-        buffer[bytes] = '\0';
-
-        return string(buffer);
     }
 
     void desconectar() {

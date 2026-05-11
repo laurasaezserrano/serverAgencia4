@@ -701,7 +701,7 @@ static void handle_ARE(SOCKET s, sqlite3 *db, char *params) {
     sqlite3_exec(db, sql_upd, 0, 0, NULL);
 
     char resp[PROTO_BUF];
-    sprintf(resp, "OK|Reserva creada|%d|#", (int)id_reserva);
+    sprintf(resp, "OK|Reserva creada|%lld|#", (int)id_reserva);
     enviar_respuesta(s, resp);
     log_escribir("Reserva creada OK");
 }
@@ -764,6 +764,10 @@ static void handle_LRC(SOCKET s, sqlite3 *db, char *params) {
         sprintf(fila, "OK|%d|%d|%s|%s|#",
             sqlite3_column_int(stmt, 0),
             sqlite3_column_int(stmt, 1),
+//			TODO: HACER ESTO CON TODOS LOS sqlite3_column_text
+//			const char *txt = (const char*)sqlite3_column_text(stmt, X);
+//			if (!txt)
+//			    txt = "";
 			(const char*)sqlite3_column_text(stmt, 2),
 			(const char*)sqlite3_column_text(stmt, 3));
         enviar_respuesta(s, fila);

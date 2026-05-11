@@ -29,6 +29,7 @@
 #include "../include/config.h"
 #include "../include/log.h"
 #include "../include/db.h"
+#include "../include/hash.h"
 #include "../include/clientes.h"
 #include "../include/paquete.h"
 #include "../include/alojamiento.h"
@@ -278,15 +279,19 @@ static void handle_LOG(SOCKET s, sqlite3 *db, char *params) {
     char *clave   = siguiente_token(NULL);
     if (!clave) { enviar_respuesta(s, "ERR|Parametros insuficientes|#"); return; }
 
-    /* Consultar la BD */
+    /* Bug fix 1: hashear la clave recibida antes de comparar con la BD,
+     * igual que hace auth.c del admin con sha256_hex()                  */
+    char hash_clave[65];
+    sha256_hex(clave, hash_clave);
+
     sqlite3_stmt *stmt;
     const char *sql = "SELECT rol FROM usuarios WHERE username=? AND password=?;";
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, usuario, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, clave,   -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, usuario,    -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, hash_clave, -1, SQLITE_STATIC);
 
     char resp[PROTO_BUF];
     if (sqlite3_step(stmt) == SQLITE_ROW) {
@@ -671,24 +676,12 @@ static void handle_ARE(SOCKET s, sqlite3 *db, char *params) {
         return;
     }
 
-    /* Crear la reserva en la tabla reservas */
+    /* Crear la reserva (tabla ya existe por db_crear_tablas) */
     const char *sql_ins =
         "INSERT INTO reservas (dni_cliente,cod_paquete,fecha,activo) VALUES (?,?,?,1);";
     if (sqlite3_prepare_v2(db, sql_ins, -1, &stmt, NULL) != SQLITE_OK) {
-        /* La tabla reservas puede no existir todavia; crearla al vuelo */
-        sqlite3_exec(db,
-            "CREATE TABLE IF NOT EXISTS reservas ("
-            "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-            "dni_cliente TEXT NOT NULL,"
-            "cod_paquete INTEGER NOT NULL,"
-            "fecha TEXT,"
-            "activo INTEGER DEFAULT 1,"
-            "FOREIGN KEY(cod_paquete) REFERENCES paquetes(codigo));",
-            0, 0, NULL);
-        if (sqlite3_prepare_v2(db, sql_ins, -1, &stmt, NULL) != SQLITE_OK) {
-            enviar_respuesta(s, "ERR|Error creando reserva|#");
-            return;
-        }
+        enviar_respuesta(s, "ERR|Error interno BD|#");
+        return;
     }
     sqlite3_bind_text(stmt, 1, dni,     -1, SQLITE_STATIC);
     sqlite3_bind_int(stmt,  2, atoi(cod_pqt));
@@ -759,16 +752,6 @@ static void handle_BRE(SOCKET s, sqlite3 *db, char *params) {
 /* LRC|dni_cliente|  ->  LST_BEGIN + filas de reservas + LST_END */
 static void handle_LRC(SOCKET s, sqlite3 *db, char *params) {
     if (!params) { enviar_respuesta(s, "ERR|DNI requerido|#"); return; }
-
-    /* Asegurar que la tabla existe */
-    sqlite3_exec(db,
-        "CREATE TABLE IF NOT EXISTS reservas ("
-        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-        "dni_cliente TEXT NOT NULL,"
-        "cod_paquete INTEGER NOT NULL,"
-        "fecha TEXT,"
-        "activo INTEGER DEFAULT 1);",
-        0, 0, NULL);
 
     const char *sql =
         "SELECT r.id, r.cod_paquete, p.nombre, r.fecha"

@@ -151,9 +151,9 @@ private:
     SOCKET sock;
     bool conectado;
 
+    string bufferInterno;
 public:
     ConexionServidor() {
-    	string bufferInterno;
         sock = INVALID_SOCKET;
         conectado = false;
     }

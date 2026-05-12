@@ -2,6 +2,8 @@
 #include <sstream>
 #include <iomanip>
 #include <iostream>
+#include <string>
+
 
 
 std::vector<std::string> partirTrama(const std::string &trama, char sep) {

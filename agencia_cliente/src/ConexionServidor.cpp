@@ -2,6 +2,8 @@
 #include "../include/protocolo.h"
 #include <iostream>
 #include <stdexcept>
+#include <string>
+
 
 /* ── Constructor / Destructor ──────────────────────────────────── */
 

@@ -56,6 +56,8 @@ public:
 
     Paquete() : codigo(0), precio(0.0), plazasTotales(0), plazasDisponibles(0) {}
 
+    bool tieneDisponibilidad() const { return plazasDisponibles > 0; }
+
     static Paquete desdeTokens(std::vector<std::string> &tokens, int offset = 0);
 
     std::string toString() const;

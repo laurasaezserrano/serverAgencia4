@@ -18,7 +18,7 @@
 #include <map>
 #include <string>
 #include <sstream>
-#include "Modelos.h"
+#include "Dominio.h"
 #include "ConexionServidor.h"
 
 class GestorDatos {

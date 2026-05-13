@@ -85,6 +85,10 @@ static char *siguiente_token(char *cadena) {
  * MAIN
  * ═══════════════════════════════════════════════════════════════ */
 int main(void) {
+    /* Desactivar buffering de stdout — necesario en Windows/MinGW
+     * para que los mensajes aparezcan inmediatamente en consola     */
+    setvbuf(stdout, NULL, _IONBF, 0);
+
     /* ── 1. Inicializar Winsock ──────────────────────────────── */
     WSADATA wsa;
     if (WSAStartup(MAKEWORD(2,2), &wsa) != 0) {

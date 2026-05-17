@@ -1,7 +1,5 @@
 /*
- * hash.h
- *
- * Utilidad SHA-256 para CityHub.
+ * Utilidad SHA-256
  * Uso:
  *   char hash[65];
  *   sha256_hex("mi_contrasena", hash);

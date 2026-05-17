@@ -2,8 +2,6 @@
 #define PROTOCOLO_H_
 
 /*
- * protocolo.h
- * -----------
  * Contrato de comunicacion entre agencia_server y agencia_cliente.
  *
  * FORMATO DE TRAMA:
@@ -16,15 +14,14 @@
  *
  */
 
-/* ── Configuracion de red ─────────────────────────────────────── */
+// Configuracion de red
 #define PROTO_HOST      "127.0.0.1"   /* IP del servidor (localhost en desarrollo) */
 #define PROTO_PORT      8080          /* Puerto TCP del servidor                   */
 #define PROTO_BUF       4096          /* Tamano maximo de una trama en bytes       */
 #define PROTO_FIN       '#'           /* Caracter centinela de fin de mensaje      */
 #define PROTO_SEP       '|'           /* Separador de campos                       */
 
-/* ── Codigos de operacion (cliente -> servidor) ───────────────── */
-
+// Codigos de operacion (cliente -> servidor)
 /* Sesion */
 #define OP_REGISTRO     "REG"   /* REG|usuario|clave|rol|#  — alta de usuario */
 #define OP_LOGIN        "LOG"   /* LOG|usuario|clave|#                         */
@@ -64,7 +61,7 @@
 #define OP_INF_RANK     "IRK"   /* IRK|#  — top 5 clientes por ingresos        */
 #define OP_INF_DEST     "IDS"   /* IDS|#  — destinos mas reservados (1 mes)   */
 
-/* ── Codigos de respuesta (servidor -> cliente) ───────────────── */
+/* Codigos de respuesta (servidor -> cliente)*/
 #define RESP_OK         "OK"    /* OK|...|#                                    */
 #define RESP_ERR        "ERR"   /* ERR|descripcion|#                           */
 

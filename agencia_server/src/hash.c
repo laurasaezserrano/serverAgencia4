@@ -1,7 +1,7 @@
 /*
  * hash.c
  *
- * Implementacion SHA-256 de dominio publico para CityHub.
+ * Implementacion SHA-256 de dominio publico
  * Basada en el estandar FIPS 180-4.
  * No requiere librerias externas.
  */

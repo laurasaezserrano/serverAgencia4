@@ -1,23 +1,3 @@
-/*
- * agencia_server.c
- * ================
- * Servidor TCP de la Agencia de Viajes — Fase 2.
- *
- * Responsabilidades:
- *   1. Leer config.ini y abrir agencia.db (misma BD que el admin).
- *   2. Abrir un socket TCP y esperar la conexion del cliente.
- *   3. Bucle: recibir trama -> parsear OP -> ejecutar en BD -> responder.
- *   4. Registrar cada operacion en server.log.
- *   5. Cierre limpio al recibir BYE o SIGINT.
- *
- * Plataforma: Windows (Winsock2).
- * Compilacion (MinGW/Eclipse CDT):
- *   gcc agencia_server.c db.c config.c log.c clientes.c paquete.c
- *       alojamiento.c transportes.c sqlite3.c -o agencia_server.exe
- *       -lws2_32 -I../include
- */
-
-/* ── Winsock debe incluirse antes que cualquier windows.h ──────── */
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
@@ -41,7 +21,7 @@
  * -> MinGW C Linker -> Libraries -> Libraries (-l) -> añadir: ws2_32
  */
 
-/* ── Prototipos internos ────────────────────────────────────────── */
+// Prototipos internos
 static void   procesar_trama(SOCKET cliente, sqlite3 *db, const char *trama);
 static void   enviar_respuesta(SOCKET s, const char *resp);
 
@@ -83,7 +63,7 @@ static char *siguiente_token(char *cadena) {
 }
 
 int main(void) {
-    // 1. Inicializar Winsock ─
+    // 1. Inicializar Winsock
     WSADATA wsa;
     if (WSAStartup(MAKEWORD(2,2), &wsa) != 0) {
         printf("Error inicializando Winsock: %d\n", WSAGetLastError());
@@ -275,9 +255,6 @@ static void enviar_respuesta(SOCKET s, const char *resp) {
 }
 
 // HANDLERS
-
-
-
 /* REG|usuario|clave|rol|  ->  OK|Usuario registrado|# */
 static void handle_REG(SOCKET s, sqlite3 *db, char *params) {
     if (!params) { enviar_respuesta(s, "ERR|Parametros insuficientes|#"); return; }

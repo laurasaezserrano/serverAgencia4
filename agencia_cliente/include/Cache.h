@@ -14,7 +14,7 @@
 
 class Cache {
 public:
-    /* ── Datos cacheados ──────────────────────────────────────── */
+    // Datos cacheados
     std::vector<Cliente>     clientes;
     std::vector<Paquete>     paquetes;
     std::vector<Alojamiento> alojamientos;
@@ -26,7 +26,7 @@ public:
     std::map<int,         Paquete>     paquetesPorCod;
     std::map<std::string, Alojamiento> alojamientosPorCod;
 
-    /* ── Flags de validez — false = hay que recargar del servidor */
+    /* Flags de validez — false = hay que recargar del servidor */
     bool clientesCargados;
     bool paquetesCargados;
     bool alojamientosCargados;

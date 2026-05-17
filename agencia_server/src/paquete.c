@@ -2,7 +2,7 @@
 #include <string.h>
 #include "../include/paquete.h"
 
-#define ARCHIVO "paquetes.dat"
+#define ARCHIVO "../agencia_admin/paquetes.dat"
 
 // Guardar paquete
 int guardarPaquete(Paquete p) {

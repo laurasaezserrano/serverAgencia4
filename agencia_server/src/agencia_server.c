@@ -491,9 +491,7 @@ static void handle_LCL(SOCKET s, sqlite3 *db) {
 
 /* LPQ|  ->  LST_BEGIN + filas + LST_END */
 static void handle_LPQ(SOCKET s, sqlite3 *db) {
-    const char *sql =
-        "SELECT codigo,nombre,precio,origen,destino,plazas_totales,plazas_disponibles"
-        " FROM paquetes WHERE activo=1 ORDER BY codigo;";
+    const char *sql = "SELECT codigo, nombre, precio, origen, destino, plazas_disponibles FROM paquetes WHERE activo=1;";
     sqlite3_stmt *stmt;
     if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
@@ -501,21 +499,29 @@ static void handle_LPQ(SOCKET s, sqlite3 *db) {
     }
 
     enviar_respuesta(s, "LST_BEGIN|#");
-
     char fila[PROTO_BUF];
+
+    printf("\n--- ENVIANDO PAQUETES AL CLIENTE ---\n");
+
     while (sqlite3_step(stmt) == SQLITE_ROW) {
-        sprintf(fila, "OK|%d|%s|%.2f|%s|%s|%d|%d|#",
+        // Imprime en la consola del servidor lo que va encontrando en la BD
+        printf("Paquete encontrado: %s a %s\n",
+               sqlite3_column_text(stmt, 1),
+               sqlite3_column_text(stmt, 4));
+
+        sprintf(fila, "OK|%d|%s|%.2f|%s|%s|%d|#",
             sqlite3_column_int(stmt, 0),
             sqlite3_column_text(stmt, 1),
             sqlite3_column_double(stmt, 2),
             sqlite3_column_text(stmt, 3),
             sqlite3_column_text(stmt, 4),
-            sqlite3_column_int(stmt, 5),
-            sqlite3_column_int(stmt, 6));
+            sqlite3_column_int(stmt, 5));
         enviar_respuesta(s, fila);
     }
     sqlite3_finalize(stmt);
     enviar_respuesta(s, "LST_END|#");
+
+    printf("------------------------------------\n");
 }
 
 /* GPQ|codigo|  ->  OK|codigo|nombre|precio|origen|destino|tot|disp|# */

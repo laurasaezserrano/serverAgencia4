@@ -512,3 +512,4 @@ static void pausar(void) {
     printf("\nPulse ENTER para continuar...");
     getchar();
 }
+

@@ -72,7 +72,7 @@ int main(void) {
 
     // 2. Cargar configuracion
     Config cfg;
-    if (cargar_config("data/config.ini", &cfg) != 0) {
+    if (cargar_config("../agencia_admin/data/config.ini", &cfg) != 0) {
         printf("Error cargando config.ini\n");
         WSACleanup();
         return 1;

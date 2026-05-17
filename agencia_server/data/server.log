@@ -153,3 +153,37 @@
 [2026-05-17 17:05:34] Cliente solicito cierre (BYE)
 [2026-05-17 17:05:34] === Servidor cerrado ===
 [2026-05-17 17:05:34] === Servidor cerrado ===
+[2026-05-17 17:11:03] === Servidor arrancado ===
+[2026-05-17 17:11:03] === Servidor arrancado ===
+[2026-05-17 17:11:03] Base de datos abierta correctamente
+[2026-05-17 17:11:03] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-17 17:11:05] Cliente conectado desde 127.0.0.1
+[2026-05-17 17:11:10] OP recibida: LOG|admin|1234|
+[2026-05-17 17:13:29] Cliente desconectado
+[2026-05-17 17:13:29] === Servidor cerrado ===
+[2026-05-17 17:13:29] === Servidor cerrado ===
+[2026-05-17 17:13:34] === Servidor arrancado ===
+[2026-05-17 17:13:34] === Servidor arrancado ===
+[2026-05-17 17:13:34] Base de datos abierta correctamente
+[2026-05-17 17:13:34] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-17 17:13:36] Cliente conectado desde 127.0.0.1
+[2026-05-17 17:13:42] OP recibida: LOG|admin|1234|
+[2026-05-17 17:15:29] Cliente desconectado
+[2026-05-17 17:15:29] === Servidor cerrado ===
+[2026-05-17 17:15:29] === Servidor cerrado ===
+[2026-05-17 17:16:09] === Servidor arrancado ===
+[2026-05-17 17:16:09] === Servidor arrancado ===
+[2026-05-17 17:16:09] Base de datos abierta correctamente
+[2026-05-17 17:16:09] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-17 17:16:12] Cliente conectado desde 127.0.0.1
+[2026-05-17 17:16:17] OP recibida: LOG|admin|1234|
+[2026-05-17 17:16:26] OP recibida: LPQ|
+[2026-05-17 17:21:04] === Servidor arrancado ===
+[2026-05-17 17:21:04] === Servidor arrancado ===
+[2026-05-17 17:21:04] Base de datos abierta correctamente
+[2026-05-17 17:21:04] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-17 17:21:07] Cliente conectado desde 127.0.0.1
+[2026-05-17 17:21:14] OP recibida: LOG|admin|1234|
+[2026-05-17 17:21:24] Cliente solicito cierre (BYE)
+[2026-05-17 17:21:24] === Servidor cerrado ===
+[2026-05-17 17:21:24] === Servidor cerrado ===

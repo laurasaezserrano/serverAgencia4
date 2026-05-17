@@ -544,15 +544,22 @@ int Menu::leerEntero(const std::string& mensaje) {
 }
 
 std::string Menu::leerCadena(const std::string& mensaje) {
-    std::string val;
+	std::string val;
     std::cout << mensaje << ": ";
+    if (std::cin.peek() == '\n') {
+        std::cin.ignore();
+    }
     std::getline(std::cin, val);
     return val;
 }
 
 void Menu::pausar() {
     std::cout << "\nPresione Enter para continuar...";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    if (std::cin.rdbuf()->in_avail() == 0) {
+        std::cin.get();
+    } else {
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    }
 }
 
 void Menu::limpiarPantalla() { system("cls"); }

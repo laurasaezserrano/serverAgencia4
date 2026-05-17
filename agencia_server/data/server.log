@@ -57,3 +57,44 @@
 [2026-05-17 16:09:51] Cliente solicito cierre (BYE)
 [2026-05-17 16:09:51] === Servidor cerrado ===
 [2026-05-17 16:09:51] === Servidor cerrado ===
+[2026-05-17 16:12:43] === Servidor arrancado ===
+[2026-05-17 16:12:43] === Servidor arrancado ===
+[2026-05-17 16:12:43] Base de datos abierta correctamente
+[2026-05-17 16:12:43] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-17 16:12:46] Cliente conectado desde 127.0.0.1
+[2026-05-17 16:14:15] Cliente desconectado
+[2026-05-17 16:14:15] === Servidor cerrado ===
+[2026-05-17 16:14:15] === Servidor cerrado ===
+[2026-05-17 16:14:48] === Servidor arrancado ===
+[2026-05-17 16:14:48] === Servidor arrancado ===
+[2026-05-17 16:14:48] Base de datos abierta correctamente
+[2026-05-17 16:14:48] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-17 16:14:50] Cliente conectado desde 127.0.0.1
+[2026-05-17 16:18:46] Cliente desconectado
+[2026-05-17 16:18:46] === Servidor cerrado ===
+[2026-05-17 16:18:46] === Servidor cerrado ===
+[2026-05-17 16:18:53] === Servidor arrancado ===
+[2026-05-17 16:18:53] === Servidor arrancado ===
+[2026-05-17 16:18:53] Base de datos abierta correctamente
+[2026-05-17 16:18:53] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-17 16:18:56] Cliente conectado desde 127.0.0.1
+[2026-05-17 16:19:02] OP recibida: LOG|zaira|1|
+[2026-05-17 16:19:08] Cliente solicito cierre (BYE)
+[2026-05-17 16:19:08] === Servidor cerrado ===
+[2026-05-17 16:19:08] === Servidor cerrado ===
+[2026-05-17 16:20:15] === Servidor arrancado ===
+[2026-05-17 16:20:15] === Servidor arrancado ===
+[2026-05-17 16:20:15] Base de datos abierta correctamente
+[2026-05-17 16:20:15] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-17 16:20:17] Cliente conectado desde 127.0.0.1
+[2026-05-17 16:20:23] OP recibida: LOG|carmen|1234|
+[2026-05-17 16:20:29] OP recibida: LPQ|
+[2026-05-17 16:23:31] === Servidor arrancado ===
+[2026-05-17 16:23:31] === Servidor arrancado ===
+[2026-05-17 16:23:31] Base de datos abierta correctamente
+[2026-05-17 16:23:31] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-17 16:23:34] Cliente conectado desde 127.0.0.1
+[2026-05-17 16:23:40] OP recibida: LOG|admin|admin|
+[2026-05-17 16:23:47] OP recibida: LOG|admin|123|
+[2026-05-17 16:23:52] OP recibida: LOG|admin|1234|
+[2026-05-17 16:24:00] OP recibida: LCL|

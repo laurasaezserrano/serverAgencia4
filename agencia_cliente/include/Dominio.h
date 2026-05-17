@@ -2,9 +2,6 @@
 #define DOMINIO_H_
 
 /*
- * Dominio.h
- * ---------
- * Clases de dominio del cliente C++.
  * No acceden a la BD directamente — representan datos en memoria
  * recibidos del servidor via protocolo.
  *
@@ -19,7 +16,6 @@
 #include <vector>
 
 //Cliente
-
 class Cliente {
 public:
     int         id;
@@ -110,7 +106,6 @@ public:
 };
 
 //Subclases concretas
-
 class Avion : public Transporte {
 public:
     Avion() { tipo = "avion"; }

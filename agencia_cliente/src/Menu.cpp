@@ -12,7 +12,7 @@
 Menu::Menu(ConexionServidor& conn, GestorDatos& gestor)
     : m_conn(conn), m_gestor(gestor) {}
 
-/* ── Leer contraseña mostrando asteriscos ─────────────────────── */
+// Leer contraseña mostrando asteriscos
 static std::string leerPassword(const std::string& mensaje) {
     std::cout << mensaje << ": ";
     std::string pass;
@@ -32,17 +32,13 @@ static std::string leerPassword(const std::string& mensaje) {
     return pass;
 }
 
-/* ════════════════════════════════════════════════════════════════
- * PUNTO DE ENTRADA
- * ════════════════════════════════════════════════════════════════ */
+// PUNTO DE ENTRADA
 void Menu::ejecutar() {
     if (!menuLogin()) return;
     menuPrincipal();
 }
 
-/* ════════════════════════════════════════════════════════════════
- * LOGIN
- * ════════════════════════════════════════════════════════════════ */
+//LOGIN
 bool Menu::menuLogin() {
     while (true) {
         limpiarPantalla();
@@ -61,7 +57,7 @@ bool Menu::menuLogin() {
         }
         if (op != 1) { std::cout << "Opcion no valida.\n"; pausar(); continue; }
 
-        /* ── Inicio de sesion ── */
+        // Inicio de sesion
         std::string usuario = leerCadena("Usuario");
         std::string clave   = leerPassword("Clave");
 
@@ -84,9 +80,7 @@ bool Menu::menuLogin() {
     }
 }
 
-/* ════════════════════════════════════════════════════════════════
- * REGISTRO DE USUARIO
- * ════════════════════════════════════════════════════════════════ */
+//REGISTRO DE USUARIO
 void Menu::menuRegistro() {
     limpiarPantalla();
     titulo("REGISTRO DE NUEVO USUARIO");
@@ -120,9 +114,7 @@ void Menu::menuRegistro() {
     pausar();
 }
 
-/* ════════════════════════════════════════════════════════════════
- * MENU PRINCIPAL
- * ════════════════════════════════════════════════════════════════ */
+//MENU PRINCIPAL
 void Menu::menuPrincipal() {
     while (true) {
         limpiarPantalla();
@@ -150,9 +142,7 @@ void Menu::menuPrincipal() {
     }
 }
 
-/* ════════════════════════════════════════════════════════════════
- * PERFIL
- * ════════════════════════════════════════════════════════════════ */
+// PERFIL
 void Menu::menuPerfil() {
     while (true) {
         limpiarPantalla();
@@ -181,9 +171,7 @@ void Menu::menuPerfil() {
     }
 }
 
-/* ════════════════════════════════════════════════════════════════
- * MIS RESERVAS
- * ════════════════════════════════════════════════════════════════ */
+// MIS RESERVAS
 void Menu::menuReservas() {
     limpiarPantalla();
     titulo("MIS RESERVAS");
@@ -220,9 +208,8 @@ void Menu::menuReservas() {
     }
 }
 
-/* ════════════════════════════════════════════════════════════════
- * PAQUETES TURISTICOS
- * ════════════════════════════════════════════════════════════════ */
+
+// PAQUETES TURISTICOS
 void Menu::menuPaquetes() {
     while (true) {
         limpiarPantalla();
@@ -248,9 +235,7 @@ void Menu::menuPaquetes() {
     }
 }
 
-/* ════════════════════════════════════════════════════════════════
- * GESTION DE CLIENTES (ADMIN)
- * ════════════════════════════════════════════════════════════════ */
+//GESTION DE CLIENTES (ADMIN)
 void Menu::menuPrincipalClientes() {
     while (true) {
         limpiarPantalla();
@@ -276,9 +261,7 @@ void Menu::menuPrincipalClientes() {
     }
 }
 
-/* ════════════════════════════════════════════════════════════════
- * ACCIONES CLIENTES
- * ════════════════════════════════════════════════════════════════ */
+//ACCIONES CLIENTES
 void Menu::listarClientes() {
     limpiarPantalla();
     titulo("LISTADO DE CLIENTES");
@@ -362,9 +345,7 @@ void Menu::modificarCliente() {
     pausar();
 }
 
-/* ════════════════════════════════════════════════════════════════
- * ACCIONES PAQUETES
- * ════════════════════════════════════════════════════════════════ */
+// ACCIONES PAQUETES
 void Menu::listarPaquetes() {
     limpiarPantalla();
     titulo("PAQUETES DISPONIBLES");
@@ -415,9 +396,7 @@ void Menu::bajaPaquete() {
     pausar();
 }
 
-/* ════════════════════════════════════════════════════════════════
- * RESERVAS
- * ════════════════════════════════════════════════════════════════ */
+// RESERVAS
 void Menu::crearReserva() {
     limpiarPantalla();
     titulo("NUEVA RESERVA");
@@ -450,9 +429,7 @@ void Menu::crearReserva() {
     pausar();
 }
 
-/* ════════════════════════════════════════════════════════════════
- * INFORMES (ADMIN)
- * ════════════════════════════════════════════════════════════════ */
+// INFORMES (ADMIN)
 void Menu::menuInformes() {
     while (true) {
         limpiarPantalla();
@@ -526,9 +503,7 @@ void Menu::informeDestinos() {
     pausar();
 }
 
-/* ════════════════════════════════════════════════════════════════
- * HELPERS UI
- * ════════════════════════════════════════════════════════════════ */
+// HELPERS UI
 int Menu::leerEntero(const std::string& mensaje) {
     int val;
     while (true) {

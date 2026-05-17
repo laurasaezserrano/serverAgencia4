@@ -10,8 +10,6 @@
  *   2. Almacenar los listados en vectores/maps para no volver a
  *      pedir al servidor datos ya descargados.
  *   3. Invalidar la cache cuando una escritura cambia los datos.
- *
- * Cumple el requisito del enunciado: "minimizar intercambios con el servidor".
  */
 
 #include <vector>
@@ -25,34 +23,34 @@ class GestorDatos {
 public:
     explicit GestorDatos(ConexionServidor& conn);
 
-    /* ── Parseo de tramas ─────────────────────────────────── */
+    /*Parseo de tramas */
     /* Divide una trama "campo1|campo2|campo3|#" en un vector de strings */
     static std::vector<std::string> parsearTrama(const std::string& trama);
 
     /* Recibe todas las filas de un listado (LST_BEGIN...LST_END) */
     std::vector<std::string> recibirListado();
 
-    /* ── Clientes ─────────────────────────────────────────── */
-    const std::vector<Cliente>& getClientes();   /* usa cache */
+    // Clientes
+    const std::vector<Cliente>& getClientes();
     Cliente* buscarClientePorDni(const std::string& dni);
     void invalidarCacheClientes() { m_clientesCargados = false; }
 
-    /* ── Paquetes ─────────────────────────────────────────── */
-    const std::vector<Paquete>& getPaquetes();   /* usa cache */
+    // Paquetes
+    const std::vector<Paquete>& getPaquetes();
     Paquete* buscarPaquetePorCodigo(int codigo);
     void invalidarCachePaquetes() { m_paquetesCargados = false; }
 
-    /* ── Alojamientos ─────────────────────────────────────── */
-    const std::vector<Alojamiento>& getAlojamientos(); /* usa cache */
+    // Alojamientos
+    const std::vector<Alojamiento>& getAlojamientos();
     void invalidarCacheAlojamientos() { m_alojamientosCargados = false; }
 
-    /* ── Transportes ──────────────────────────────────────── */
-    /* Devuelve punteros polimorficos — el caller NO los libera */
-    const std::vector<Transporte*>& getTransportes(); /* usa cache */
+    // Transportes
+    /* Devuelve punteros polimorficos */
+    const std::vector<Transporte*>& getTransportes();
     void invalidarCacheTransportes();
     ~GestorDatos(); /* libera los Transporte* */
 
-    /* ── Reservas (no se cachean — siempre frescas) ───────── */
+    // Reservas
     std::vector<Reserva> getReservasPorCliente(const std::string& dni);
 
 private:

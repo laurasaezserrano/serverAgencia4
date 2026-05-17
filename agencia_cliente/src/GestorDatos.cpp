@@ -9,7 +9,7 @@ GestorDatos::~GestorDatos() {
     invalidarCacheTransportes();
 }
 
-/* ── Utilidad: partir trama por '|' y '#' ────────────────────── */
+// Partir trama por '|' y '#'
 std::vector<std::string> GestorDatos::parsearTrama(const std::string& trama) {
     std::vector<std::string> campos;
     std::string campo;
@@ -23,7 +23,7 @@ std::vector<std::string> GestorDatos::parsearTrama(const std::string& trama) {
     return campos;
 }
 
-/* ── Recibir listado completo LST_BEGIN...LST_END ─────────────── */
+// Recibir listado completo LST_BEGIN...LST_END
 std::vector<std::string> GestorDatos::recibirListado() {
     std::vector<std::string> filas;
     std::string linea = m_conn.recibir();
@@ -36,7 +36,7 @@ std::vector<std::string> GestorDatos::recibirListado() {
     return filas;
 }
 
-/* ── CLIENTES ─────────────────────────────────────────────────── */
+// CLIENTES
 void GestorDatos::cargarClientes() {
     m_clientes.clear();
     m_conn.enviar(std::string(OP_LIST_CLI) + "|#");
@@ -74,7 +74,7 @@ Cliente GestorDatos::parsearCliente(const std::vector<std::string>& c) {
     return Cliente::desdeTokens(datos, 0);
 }
 
-/* ── PAQUETES ─────────────────────────────────────────────────── */
+// PAQUETES
 void GestorDatos::cargarPaquetes() {
     m_paquetes.clear();
     m_conn.enviar(std::string(OP_LIST_PQT) + "|#");
@@ -110,7 +110,7 @@ Paquete GestorDatos::parsearPaquete(const std::vector<std::string>& c) {
     return Paquete::desdeTokens(datos, 0);
 }
 
-/* ── ALOJAMIENTOS ─────────────────────────────────────────────── */
+// ALOJAMIENTOS
 void GestorDatos::cargarAlojamientos() {
     m_alojamientos.clear();
     m_conn.enviar(std::string(OP_LIST_ALO) + "|#");
@@ -133,7 +133,7 @@ Alojamiento GestorDatos::parsearAlojamiento(const std::vector<std::string>& c) {
     return Alojamiento::desdeTokens(datos, 0);
 }
 
-/* ── TRANSPORTES (polimorficos) ───────────────────────────────── */
+// TRANSPORTES (polimorfico)
 void GestorDatos::cargarTransportes() {
     invalidarCacheTransportes();
     m_conn.enviar(std::string(OP_LIST_TRP) + "|#");
@@ -165,7 +165,7 @@ Transporte* GestorDatos::parsearTransporte(const std::vector<std::string>& c) {
     return Transporte::desdeTokens(datos, 0);
 }
 
-/* ── RESERVAS ─────────────────────────────────────────────────── */
+// RESERVAS
 std::vector<Reserva> GestorDatos::getReservasPorCliente(const std::string& dni) {
     std::vector<Reserva> reservas;
     m_conn.enviar(std::string(OP_LIST_RES_CLI) + "|" + dni + "|#");

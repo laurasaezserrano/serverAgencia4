@@ -2,11 +2,6 @@
 #define MENU_H_
 
 /*
- * Menu.h
- * ------
- * Gestion de los menus jerarquicos del cliente.
- * Estructura segun el enunciado:
- *
  *   Login
  *   └── Menu Principal
  *         ├── 1. Perfil
@@ -33,43 +28,43 @@ private:
     std::string       m_rolActual;      /* "ADMIN" o "CLIENTE" */
     std::string       m_dniActual;      /* DNI del cliente logueado */
 
-    /* ── Login ─────────────────────────────────────────────── */
+    // Login
     bool menuLogin();
     void menuRegistro();
 
-    /* ── Menu principal ────────────────────────────────────── */
+    // Menu principal
     void menuPrincipal();
 
-    /* ── Submenues ─────────────────────────────────────────── */
+    // Submenus
     void menuPerfil();
     void menuReservas();
     void menuPaquetes();
     void menuPrincipalClientes(); /* gestion de clientes, solo ADMIN */
     void menuInformes();          /* solo ADMIN */
 
-    /* ── Acciones de clientes ──────────────────────────────── */
+    //Acciones de clientes
     void altaCliente();
     void bajaCliente();
     void modificarCliente();
     void buscarCliente();
     void listarClientes();
 
-    /* ── Acciones de paquetes ──────────────────────────────── */
+    // Acciones de paquetes
     void listarPaquetes();
     void crearPaquete();
     void bajaPaquete();
 
-    /* ── Acciones de reservas ──────────────────────────────── */
+    // Acciones de reservas
     void crearReserva();
     void cancelarReserva();
     void verMisReservas();
 
-    /* ── Informes ──────────────────────────────────────────── */
+    // Informes
     void informeOcupacion();
     void informeRanking();
     void informeDestinos();
 
-    /* ── Helpers UI ────────────────────────────────────────── */
+    //Helpers UI
     int    leerEntero(const std::string& mensaje);
     float  leerFloat(const std::string& mensaje);
     std::string leerCadena(const std::string& mensaje);

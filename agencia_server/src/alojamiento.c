@@ -1,11 +1,3 @@
-/*
- * alojamiento.c
- *
- *  Created on: 26 mar 2026
- *      Author: zaira.diez
- */
-
-
 #include <stdio.h>
 #include <string.h>
 #include "../include/alojamiento.h"

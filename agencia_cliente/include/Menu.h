@@ -35,6 +35,7 @@ private:
 
     /* ── Login ─────────────────────────────────────────────── */
     bool menuLogin();
+    void menuRegistro();
 
     /* ── Menu principal ────────────────────────────────────── */
     void menuPrincipal();

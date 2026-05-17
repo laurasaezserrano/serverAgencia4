@@ -5,7 +5,7 @@
 #include <string>
 
 
-/* ── Constructor / Destructor ──────────────────────────────────── */
+// Constructor / Destructor
 
 ConexionServidor::ConexionServidor()
     : _socket(INVALID_SOCKET), _conectado(false), _wsaIniciado(false) {}
@@ -19,7 +19,7 @@ ConexionServidor::~ConexionServidor() {
     }
 }
 
-/* ── conectar ──────────────────────────────────────────────────── */
+// Conectar
 
 bool ConexionServidor::conectar(const std::string &ip, int puerto) {
     /* 1. Inicializar Winsock (solo la primera vez) */
@@ -69,8 +69,7 @@ bool ConexionServidor::conectar(const std::string &ip, int puerto) {
     return true;
 }
 
-/* ── enviar ────────────────────────────────────────────────────── */
-
+// Enviar
 bool ConexionServidor::enviar(const std::string &trama) {
     if (!_conectado) return false;
 
@@ -83,8 +82,7 @@ bool ConexionServidor::enviar(const std::string &trama) {
     return true;
 }
 
-/* ── recibir ───────────────────────────────────────────────────── */
-/*
+/* Recibir
  * Acumula datos en _buffer hasta encontrar el centinela '#'.
  * Esto maneja correctamente el caso de que TCP fragmente la respuesta
  * en varios paquetes, o que lleguen dos tramas juntas.
@@ -117,8 +115,7 @@ std::string ConexionServidor::recibir() {
     }
 }
 
-/* ── desconectar ───────────────────────────────────────────────── */
-
+// Desconectar
 void ConexionServidor::desconectar() {
     if (_conectado) {
         /* Avisar al servidor antes de cerrar */
@@ -130,8 +127,7 @@ void ConexionServidor::desconectar() {
     }
 }
 
-/* ── estaConectado ─────────────────────────────────────────────── */
-
+// Conectado
 bool ConexionServidor::estaConectado() const {
     return _conectado;
 }

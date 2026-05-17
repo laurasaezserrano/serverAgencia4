@@ -46,6 +46,7 @@ static void   procesar_trama(SOCKET cliente, sqlite3 *db, const char *trama);
 static void   enviar_respuesta(SOCKET s, const char *resp);
 
 /* Handlers: uno por codigo de operacion */
+static void   handle_REG(SOCKET s, sqlite3 *db, char *params);
 static void   handle_LOG(SOCKET s, sqlite3 *db, char *params);
 static void   handle_ACL(SOCKET s, sqlite3 *db, char *params);
 static void   handle_BCL(SOCKET s, sqlite3 *db, char *params);
@@ -70,7 +71,7 @@ static void   handle_IOC(SOCKET s, sqlite3 *db);
 static void   handle_IRK(SOCKET s, sqlite3 *db);
 static void   handle_IDS(SOCKET s, sqlite3 *db);
 
-/* ── Utilidades internas ────────────────────────────────────────── */
+// Utilidades internas
 
 /*
  * siguiente_token — extrae el siguiente campo separado por '|'.
@@ -81,22 +82,15 @@ static char *siguiente_token(char *cadena) {
     return strtok(cadena, "|");
 }
 
-/* ═══════════════════════════════════════════════════════════════
- * MAIN
- * ═══════════════════════════════════════════════════════════════ */
 int main(void) {
-    /* Desactivar buffering de stdout — necesario en Windows/MinGW
-     * para que los mensajes aparezcan inmediatamente en consola     */
-    setvbuf(stdout, NULL, _IONBF, 0);
-
-    /* ── 1. Inicializar Winsock ──────────────────────────────── */
+    // 1. Inicializar Winsock ─
     WSADATA wsa;
     if (WSAStartup(MAKEWORD(2,2), &wsa) != 0) {
         printf("Error inicializando Winsock: %d\n", WSAGetLastError());
         return 1;
     }
 
-    /* ── 2. Cargar configuracion ─────────────────────────────── */
+    // 2. Cargar configuracion
     Config cfg;
     if (cargar_config("data/config.ini", &cfg) != 0) {
         printf("Error cargando config.ini\n");
@@ -104,11 +98,11 @@ int main(void) {
         return 1;
     }
 
-    /* ── 3. Abrir log ────────────────────────────────────────── */
+    // 3. Abrir log
     log_abrir(cfg.log_path[0] ? cfg.log_path : "data/server.log");
     log_escribir("=== Servidor arrancado ===");
 
-    /* ── 4. Abrir base de datos ──────────────────────────────── */
+    // 4. Abrir base de datos
     sqlite3 *db;
     if (db_abrir(&db, cfg.db_path) != 0) {
         log_escribir("ERROR: no se pudo abrir la base de datos");
@@ -119,7 +113,7 @@ int main(void) {
     db_crear_tablas(db);
     log_escribir("Base de datos abierta correctamente");
 
-    /* ── 5. Crear socket servidor ────────────────────────────── */
+    //5. Crear socket servidor
     SOCKET srv = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (srv == INVALID_SOCKET) {
         log_escribir("ERROR: no se pudo crear el socket");
@@ -133,7 +127,7 @@ int main(void) {
     int opt = 1;
     setsockopt(srv, SOL_SOCKET, SO_REUSEADDR, (const char*)&opt, sizeof(opt));
 
-    /* ── 6. Bind ─────────────────────────────────────────────── */
+    // 6. Bind
     struct sockaddr_in addr;
     memset(&addr, 0, sizeof(addr));
     addr.sin_family      = AF_INET;
@@ -149,14 +143,14 @@ int main(void) {
         return 1;
     }
 
-    /* ── 7. Listen ───────────────────────────────────────────── */
+    // 7. Listen
     listen(srv, 1);   /* cola de 1: solo atendemos un cliente a la vez */
 
     char msg_listen[128];
     sprintf(msg_listen, "Escuchando en puerto %d... (esperando cliente)", cfg.port);
     log_escribir(msg_listen);
 
-    /* ── 8. Accept — bloqueante hasta que conecte el cliente ─── */
+    // 8. Accept: bloqueante hasta que conecte el cliente
     struct sockaddr_in addr_cli;
     int len_cli = sizeof(addr_cli);
     SOCKET cli = accept(srv, (struct sockaddr*)&addr_cli, &len_cli);
@@ -175,7 +169,7 @@ int main(void) {
     sprintf(msg_conn, "Cliente conectado desde %s", inet_ntoa(addr_cli.sin_addr));
     log_escribir(msg_conn);
 
-    /* ── 9. Bucle de atencion ────────────────────────────────── */
+    //Bucle de atencion-
     char buf[PROTO_BUF];
     int  activo = 1;
 
@@ -212,7 +206,7 @@ int main(void) {
         }
     }
 
-    /* ── 10. Cierre limpio ───────────────────────────────────── */
+    // 10. Cierre limpio
     closesocket(cli);
     closesocket(srv);
     db_cerrar(db);
@@ -222,11 +216,9 @@ int main(void) {
     return 0;
 }
 
-/* ═══════════════════════════════════════════════════════════════
- * DESPACHO DE OPERACIONES
- * Extrae el COD_OP de la trama y llama al handler correspondiente.
+/* Extrae el COD_OP de la trama y llama al handler correspondiente.
  * Formato de entrada: "COD_OP|param1|param2|..."  (sin '#' final)
- * ═══════════════════════════════════════════════════════════════ */
+  */
 static void procesar_trama(SOCKET cliente, sqlite3 *db, const char *trama) {
     /* Copiar para no modificar el original con strtok */
     char copia[PROTO_BUF];
@@ -247,8 +239,9 @@ static void procesar_trama(SOCKET cliente, sqlite3 *db, const char *trama) {
     sprintf(logmsg, "OP recibida: %s", trama);
     log_escribir(logmsg);
 
-    /* Despacho */
-    if      (strcmp(op, OP_LOGIN)    == 0) handle_LOG(cliente, db, params);
+
+    if      (strcmp(op, OP_REGISTRO) == 0) handle_REG(cliente, db, params);
+    else if (strcmp(op, OP_LOGIN)    == 0) handle_LOG(cliente, db, params);
     else if (strcmp(op, OP_ALTA_CLI) == 0) handle_ACL(cliente, db, params);
     else if (strcmp(op, OP_BAJA_CLI) == 0) handle_BCL(cliente, db, params);
     else if (strcmp(op, OP_MOD_CLI)  == 0) handle_MCL(cliente, db, params);
@@ -276,14 +269,50 @@ static void procesar_trama(SOCKET cliente, sqlite3 *db, const char *trama) {
     }
 }
 
-/* ── Enviar respuesta al cliente ──────────────────────────────── */
+//Enviar respuesta al cliente
 static void enviar_respuesta(SOCKET s, const char *resp) {
     send(s, resp, (int)strlen(resp), 0);
 }
 
-/* ═══════════════════════════════════════════════════════════════
- * HANDLERS
- * ═══════════════════════════════════════════════════════════════ */
+// HANDLERS
+
+
+
+/* REG|usuario|clave|rol|  ->  OK|Usuario registrado|# */
+static void handle_REG(SOCKET s, sqlite3 *db, char *params) {
+    if (!params) { enviar_respuesta(s, "ERR|Parametros insuficientes|#"); return; }
+
+    char *usuario = params;
+    char *clave   = siguiente_token(NULL);
+    char *rol     = siguiente_token(NULL);
+
+    if (!clave || !rol) { enviar_respuesta(s, "ERR|Faltan campos|#"); return; }
+
+    /* Hashear la clave antes de guardar */
+    char hash_clave[65];
+    sha256_hex(clave, hash_clave);
+
+    const char *sql =
+        "INSERT INTO usuarios (username, password, rol) VALUES (?,?,?);";
+    sqlite3_stmt *stmt;
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        enviar_respuesta(s, "ERR|Error interno BD|#");
+        return;
+    }
+    sqlite3_bind_text(stmt, 1, usuario,    -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 2, hash_clave, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, rol,        -1, SQLITE_STATIC);
+
+    if (sqlite3_step(stmt) == SQLITE_DONE) {
+        char logmsg[128];
+        sprintf(logmsg, "Nuevo usuario registrado: %s [%s]", usuario, rol);
+        log_escribir(logmsg);
+        enviar_respuesta(s, "OK|Usuario registrado|#");
+    } else {
+        enviar_respuesta(s, "ERR|Usuario ya existe|#");
+    }
+    sqlite3_finalize(stmt);
+}
 
 /* LOG|usuario|clave|  ->  OK|AUTH|rol|#  o  ERR|...|# */
 static void handle_LOG(SOCKET s, sqlite3 *db, char *params) {

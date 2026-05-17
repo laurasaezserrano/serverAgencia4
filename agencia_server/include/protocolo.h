@@ -26,6 +26,7 @@
 /* ── Codigos de operacion (cliente -> servidor) ───────────────── */
 
 /* Sesion */
+#define OP_REGISTRO     "REG"   /* REG|usuario|clave|rol|#  — alta de usuario */
 #define OP_LOGIN        "LOG"   /* LOG|usuario|clave|#                         */
 #define OP_LOGOUT       "BYE"   /* BYE|#   — cierra la conexion                */
 

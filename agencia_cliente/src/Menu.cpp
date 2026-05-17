@@ -14,22 +14,34 @@ Menu::Menu(ConexionServidor& conn, GestorDatos& gestor)
 
 // Leer contraseña mostrando asteriscos
 static std::string leerPassword(const std::string& mensaje) {
-    std::cout << mensaje << ": ";
+	std::cout << mensaje << ": ";
     std::string pass;
-    char c;
-    while ((c = _getch()) != '\r') {   /* '\r' = Enter en Windows */
-        if (c == '\b') {               /* Backspace */
-            if (!pass.empty()) {
-                pass.pop_back();
-                std::cout << "\b \b";
-            }
-        } else if (c >= 32) {          /* caracter imprimible */
-            pass += c;
-            std::cout << '*';
-        }
+
+    // Limpiar buffer residual
+    while (std::cin.peek() == '\n' || std::cin.peek() == '\r') {
+    	std::cin.ignore();
     }
+
+    std::getline(std::cin, pass);
     std::cout << '\n';
     return pass;
+
+//	std::cout << mensaje << ": ";
+//    std::string pass;
+//    char c;
+//    while ((c = _getch()) != '\r') {   /* '\r' = Enter en Windows */
+//        if (c == '\b') {               /* Backspace */
+//            if (!pass.empty()) {
+//                pass.pop_back();
+//                std::cout << "\b \b";
+//            }
+//        } else if (c >= 32) {          /* caracter imprimible */
+//            pass += c;
+//            std::cout << '*';
+//        }
+//    }
+//    std::cout << '\n';
+//    return pass;
 }
 
 // PUNTO DE ENTRADA
@@ -505,10 +517,11 @@ void Menu::informeDestinos() {
 
 // HELPERS UI
 int Menu::leerEntero(const std::string& mensaje) {
-    int val;
-    while (true) {
+	int val;
+	while (true) {
         if (!mensaje.empty()) std::cout << mensaje << ": ";
         if (std::cin >> val) {
+            // Limpiar TODO lo que quede en la línea, no solo el \n
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             return val;
         }
@@ -520,8 +533,9 @@ int Menu::leerEntero(const std::string& mensaje) {
 
 std::string Menu::leerCadena(const std::string& mensaje) {
 	std::string val;
-    std::cout << mensaje << ": ";
-    if (std::cin.peek() == '\n') {
+	std::cout << mensaje << ": ";
+    // Limpiar \n residuales antes del getline
+    while (std::cin.peek() == '\n' || std::cin.peek() == '\r') {
         std::cin.ignore();
     }
     std::getline(std::cin, val);

@@ -115,3 +115,41 @@
 [2026-05-17 16:47:00] Cliente conectado desde 127.0.0.1
 [2026-05-17 16:47:07] OP recibida: LOG|admin|1234|
 [2026-05-17 16:47:12] OP recibida: LPQ|
+[2026-05-17 16:50:27] === Servidor arrancado ===
+[2026-05-17 16:50:27] === Servidor arrancado ===
+[2026-05-17 16:50:27] Base de datos abierta correctamente
+[2026-05-17 16:50:27] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-17 16:50:44] Cliente desconectado
+[2026-05-17 16:50:44] === Servidor cerrado ===
+[2026-05-17 16:50:44] === Servidor cerrado ===
+[2026-05-17 16:51:02] === Servidor arrancado ===
+[2026-05-17 16:51:02] === Servidor arrancado ===
+[2026-05-17 16:51:02] Base de datos abierta correctamente
+[2026-05-17 16:51:02] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-17 16:51:05] Cliente conectado desde 127.0.0.1
+[2026-05-17 16:51:12] OP recibida: LOG|admin|1234|
+[2026-05-17 16:51:23] OP recibida: LOG|admin|1234|
+[2026-05-17 16:51:48] OP recibida: REG|admin|1234|CLIENTE|
+[2026-05-17 16:56:37] Cliente solicito cierre (BYE)
+[2026-05-17 16:56:37] === Servidor cerrado ===
+[2026-05-17 16:56:37] === Servidor cerrado ===
+[2026-05-17 16:56:43] === Servidor arrancado ===
+[2026-05-17 16:56:43] === Servidor arrancado ===
+[2026-05-17 16:56:43] Base de datos abierta correctamente
+[2026-05-17 16:56:43] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-17 16:56:46] Cliente conectado desde 127.0.0.1
+[2026-05-17 16:56:53] OP recibida: LOG|admin|1234|
+[2026-05-17 16:57:03] OP recibida: REG|admin|1234|CLIENTE|
+[2026-05-17 16:57:08] Cliente solicito cierre (BYE)
+[2026-05-17 16:57:08] === Servidor cerrado ===
+[2026-05-17 16:57:08] === Servidor cerrado ===
+[2026-05-17 17:05:10] === Servidor arrancado ===
+[2026-05-17 17:05:10] === Servidor arrancado ===
+[2026-05-17 17:05:10] Base de datos abierta correctamente
+[2026-05-17 17:05:10] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-17 17:05:12] Cliente conectado desde 127.0.0.1
+[2026-05-17 17:05:19] OP recibida: LOG|admin|1234|
+[2026-05-17 17:05:31] OP recibida: REG|admin|1234|CLIENTE|
+[2026-05-17 17:05:34] Cliente solicito cierre (BYE)
+[2026-05-17 17:05:34] === Servidor cerrado ===
+[2026-05-17 17:05:34] === Servidor cerrado ===

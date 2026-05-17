@@ -91,6 +91,7 @@ int main(void) {
         return 1;
     }
     db_crear_tablas(db);
+    db_crear_tablas(db);
     log_escribir("Base de datos abierta correctamente");
 
     //5. Crear socket servidor

@@ -98,3 +98,13 @@
 [2026-05-17 16:23:47] OP recibida: LOG|admin|123|
 [2026-05-17 16:23:52] OP recibida: LOG|admin|1234|
 [2026-05-17 16:24:00] OP recibida: LCL|
+[2026-05-17 16:42:51] Cliente desconectado
+[2026-05-17 16:42:51] === Servidor cerrado ===
+[2026-05-17 16:42:51] === Servidor cerrado ===
+[2026-05-17 16:43:11] === Servidor arrancado ===
+[2026-05-17 16:43:11] === Servidor arrancado ===
+[2026-05-17 16:43:11] Base de datos abierta correctamente
+[2026-05-17 16:43:11] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-17 16:43:13] Cliente conectado desde 127.0.0.1
+[2026-05-17 16:43:27] OP recibida: LOG|admin|1234|
+[2026-05-17 16:43:32] OP recibida: LPQ|

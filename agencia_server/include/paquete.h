@@ -19,4 +19,6 @@ void consultarPaquete(sqlite3 *db);
 void listadoPaquetes(sqlite3 *db);
 void menuPaquetes(sqlite3 *db);
 
+void importar_paquetes_dat(sqlite3 *db);
+
 #endif /* PAQUETE_H_ */

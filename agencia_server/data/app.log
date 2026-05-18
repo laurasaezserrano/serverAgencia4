@@ -102,3 +102,39 @@
 [2026-05-18 10:25:05] Cliente desconectado
 [2026-05-18 10:25:05] === Servidor cerrado ===
 [2026-05-18 10:25:05] === Servidor cerrado ===
+[2026-05-18 10:29:25] === Servidor arrancado ===
+[2026-05-18 10:29:25] === Servidor arrancado ===
+[2026-05-18 10:29:25] Base de datos abierta correctamente
+[2026-05-18 10:29:25] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 10:29:31] Cliente conectado desde 127.0.0.1
+[2026-05-18 10:29:38] OP recibida: LOG|admin|1234|
+[2026-05-18 10:30:16] Cliente desconectado
+[2026-05-18 10:30:16] === Servidor cerrado ===
+[2026-05-18 10:30:16] === Servidor cerrado ===
+[2026-05-18 10:30:38] === Servidor arrancado ===
+[2026-05-18 10:30:38] === Servidor arrancado ===
+[2026-05-18 10:30:38] Base de datos abierta correctamente
+[2026-05-18 10:30:38] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 10:30:41] Cliente conectado desde 127.0.0.1
+[2026-05-18 10:30:47] OP recibida: LOG|admin|1234|
+[2026-05-18 10:32:30] OP recibida: LCL|
+[2026-05-18 10:38:36] === Servidor arrancado ===
+[2026-05-18 10:38:36] === Servidor arrancado ===
+[2026-05-18 10:38:37] Base de datos abierta correctamente
+[2026-05-18 10:38:37] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 10:38:41] Cliente conectado desde 127.0.0.1
+[2026-05-18 10:38:50] OP recibida: LOG|admin|1234|
+[2026-05-18 10:39:48] OP recibida: ACL|11111111|Zaira|Diez Garcia|666666666|zaira@deusto.es|2006-01-10|
+[2026-05-18 10:39:48] Alta de cliente OK
+[2026-05-18 10:40:17] OP recibida: LCL|
+[2026-05-18 10:51:10] === Servidor arrancado ===
+[2026-05-18 10:51:10] === Servidor arrancado ===
+[2026-05-18 10:51:10] Base de datos abierta correctamente
+[2026-05-18 10:51:10] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 10:52:25] === Servidor arrancado ===
+[2026-05-18 10:52:25] === Servidor arrancado ===
+[2026-05-18 10:52:25] Base de datos abierta correctamente
+[2026-05-18 10:52:25] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 10:52:32] Cliente conectado desde 127.0.0.1
+[2026-05-18 10:52:41] OP recibida: LOG|admin|1234|
+[2026-05-18 10:53:10] OP recibida: IOC|

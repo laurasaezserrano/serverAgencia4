@@ -260,9 +260,9 @@ static void enviar_respuesta(SOCKET s, const char *resp) {
 static void handle_REG(SOCKET s, sqlite3 *db, char *params) {
     if (!params) { enviar_respuesta(s, "ERR|Parametros insuficientes|#"); return; }
 
-    char *usuario = strtok(params, "|");
-    char *clave   = strtok(NULL, "|");
-    char *rol     = strtok(NULL, "|");
+    char *usuario = params;
+    char *clave   = siguiente_token(NULL);
+    char *rol     = siguiente_token(NULL);
 
     if (!clave || !rol) { enviar_respuesta(s, "ERR|Faltan campos|#"); return; }
 
@@ -296,8 +296,8 @@ static void handle_REG(SOCKET s, sqlite3 *db, char *params) {
 static void handle_LOG(SOCKET s, sqlite3 *db, char *params) {
     if (!params) { enviar_respuesta(s, "ERR|Parametros insuficientes|#"); return; }
 
-    char *usuario = strtok(params, "|");
-    char *clave   = strtok(NULL, "|");
+    char *usuario = params;
+    char *clave   = siguiente_token(NULL);
     if (!clave) { enviar_respuesta(s, "ERR|Parametros insuficientes|#"); return; }
 
     /* Bug fix 1: hashear la clave recibida antes de comparar con la BD,
@@ -329,12 +329,12 @@ static void handle_LOG(SOCKET s, sqlite3 *db, char *params) {
 static void handle_ACL(SOCKET s, sqlite3 *db, char *params) {
     if (!params) { enviar_respuesta(s, "ERR|Parametros insuficientes|#"); return; }
 
-    char *dni       = strtok(params, "|");
-    char *nombre    = strtok(NULL, "|");
-    char *apellidos = strtok(NULL, "|");
-    char *tlf       = strtok(NULL, "|");
-    char *email     = strtok(NULL, "|");
-    char *fnac      = strtok(NULL, "|");
+    char *dni       = params;
+    char *nombre    = siguiente_token(NULL);
+    char *apellidos = siguiente_token(NULL);
+    char *tlf       = siguiente_token(NULL);
+    char *email     = siguiente_token(NULL);
+    char *fnac      = siguiente_token(NULL);
 
     if (!nombre || !apellidos || !tlf || !email || !fnac) {
         enviar_respuesta(s, "ERR|Faltan campos del cliente|#");
@@ -391,12 +391,12 @@ static void handle_BCL(SOCKET s, sqlite3 *db, char *params) {
 static void handle_MCL(SOCKET s, sqlite3 *db, char *params) {
     if (!params) { enviar_respuesta(s, "ERR|Parametros insuficientes|#"); return; }
 
-    char *dni       = strtok(params, "|");
-    char *nombre    = strtok(NULL, "|");
-    char *apellidos = strtok(NULL, "|");
-    char *tlf       = strtok(NULL, "|");
-    char *email     = strtok(NULL, "|");
-    char *fnac      = strtok(NULL, "|");
+    char *dni       = params;
+    char *nombre    = siguiente_token(NULL);
+    char *apellidos = siguiente_token(NULL);
+    char *tlf       = siguiente_token(NULL);
+    char *email     = siguiente_token(NULL);
+    char *fnac      = siguiente_token(NULL);
 
     if (!nombre || !apellidos || !tlf || !email || !fnac) {
         enviar_respuesta(s, "ERR|Faltan campos|#");
@@ -559,12 +559,12 @@ static void handle_GPQ(SOCKET s, sqlite3 *db, char *params) {
 static void handle_APQ(SOCKET s, sqlite3 *db, char *params) {
     if (!params) { enviar_respuesta(s, "ERR|Parametros insuficientes|#"); return; }
 
-    char *cod     = strtok(params, "|");
-    char *nombre  = strtok(NULL, "|");
-    char *precio  = strtok(NULL, "|");
-    char *origen  = strtok(NULL, "|");
-    char *destino = strtok(NULL, "|");
-    char *plazas  = strtok(NULL, "|");
+    char *cod     = params;
+    char *nombre  = siguiente_token(NULL);
+    char *precio  = siguiente_token(NULL);
+    char *origen  = siguiente_token(NULL);
+    char *destino = siguiente_token(NULL);
+    char *plazas  = siguiente_token(NULL);
 
     if (!nombre || !precio || !origen || !destino || !plazas) {
         enviar_respuesta(s, "ERR|Faltan campos del paquete|#");
@@ -674,11 +674,11 @@ static void handle_GAL(SOCKET s, sqlite3 *db, char *params) {
 static void handle_AAL(SOCKET s, sqlite3 *db, char *params) {
     if (!params) { enviar_respuesta(s, "ERR|Parametros insuficientes|#"); return; }
 
-    char *cod      = strtok(params, "|");
-    char *nombre   = strtok(NULL, "|");
-    char *dir      = strtok(NULL, "|");
-    char *tipo     = strtok(NULL, "|");
-    char *cod_city = strtok(NULL, "|");
+    char *cod      = params;
+    char *nombre   = siguiente_token(NULL);
+    char *dir      = siguiente_token(NULL);
+    char *tipo     = siguiente_token(NULL);
+    char *cod_city = siguiente_token(NULL);
 
     if (!nombre || !dir || !tipo || !cod_city) {
         enviar_respuesta(s, "ERR|Faltan campos del alojamiento|#");
@@ -761,11 +761,11 @@ static void handle_LTR(SOCKET s, sqlite3 *db) {
 static void handle_ATR(SOCKET s, sqlite3 *db, char *params) {
     if (!params) { enviar_respuesta(s, "ERR|Parametros insuficientes|#"); return; }
 
-    char *cod        = strtok(params, "|");
-    char *tipo       = strtok(NULL, "|");
-    char *f_salida   = strtok(NULL, "|");
-    char *f_llegada  = strtok(NULL, "|");
-    char *id_paquete = strtok(NULL, "|");
+    char *cod        = params;
+    char *tipo       = siguiente_token(NULL);
+    char *f_salida   = siguiente_token(NULL);
+    char *f_llegada  = siguiente_token(NULL);
+    char *id_paquete = siguiente_token(NULL);
 
     if (!tipo || !f_salida || !f_llegada || !id_paquete) {
         enviar_respuesta(s, "ERR|Faltan campos del transporte|#");
@@ -822,9 +822,9 @@ static void handle_BTR(SOCKET s, sqlite3 *db, char *params) {
 static void handle_ARE(SOCKET s, sqlite3 *db, char *params) {
     if (!params) { enviar_respuesta(s, "ERR|Parametros insuficientes|#"); return; }
 
-    char *dni      = strtok(params, "|");
-    char *cod_pqt  = strtok(NULL, "|");
-    char *fecha    = strtok(NULL, "|");
+    char *dni      = params;
+    char *cod_pqt  = siguiente_token(NULL);
+    char *fecha    = siguiente_token(NULL);
 
     if (!cod_pqt || !fecha) {
         enviar_respuesta(s, "ERR|Faltan campos de reserva|#");

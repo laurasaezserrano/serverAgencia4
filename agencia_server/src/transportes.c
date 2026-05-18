@@ -220,10 +220,10 @@ void menuTransporte(sqlite3 *db) {
 
         switch (opcion) {
             case 1: altaTransporte(db); break;
-            case 2: bajaTransporte(); break;
-            case 3: consultarTransporte(); break;
-            case 4: asociarTransporte(); break;
-            case 5: listadoTransportes(); break;
+            case 2: bajaTransporte(db); break;
+            case 3: consultarTransporte(db); break;
+            case 4: asociarTransporte(db); break;
+            case 5: listadoTransportes(db); break;
         }
 
     } while (opcion != 0);

@@ -11,7 +11,7 @@ typedef struct {
     int  activo;
 } Alojamiento;
 
-void guardarAlojamiento(Alojamiento a);
+void guardarAlojamiento(sqlite3 *db, Alojamiento a);
 void altaAlojamiento(sqlite3 *db);
 void bajaAlojamiento(sqlite3 *db);
 void consultarAlojamiento(sqlite3 *db);

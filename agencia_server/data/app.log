@@ -46,3 +46,6 @@
 [2026-05-18 09:57:23] Escuchando en puerto 8080... (esperando cliente)
 [2026-05-18 09:57:26] Cliente conectado desde 127.0.0.1
 [2026-05-18 09:57:32] OP recibida: LOG|carmen|1234|
+[2026-05-18 10:02:20] Cliente desconectado
+[2026-05-18 10:02:20] === Servidor cerrado ===
+[2026-05-18 10:02:20] === Servidor cerrado ===

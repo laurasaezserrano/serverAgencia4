@@ -2,8 +2,6 @@
 #include <string.h>
 #include "../include/alojamiento.h"
 
-#define ARCHIVO "alojamientos.dat"
-
 // Guardar alojamiento
 void guardarAlojamiento(Alojamiento a) {
     FILE *f = fopen(ARCHIVO, "ab");

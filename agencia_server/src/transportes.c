@@ -2,7 +2,6 @@
 #include <string.h>
 #include "../include/transporte.h"
 
-#define ARCHIVO "transportes.dat"
 
 void guardarTransporte(Transporte t) {
     FILE *f = fopen(ARCHIVO, "ab");

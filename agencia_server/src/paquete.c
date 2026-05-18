@@ -2,7 +2,6 @@
 #include <string.h>
 #include "../include/paquete.h"
 
-#define ARCHIVO "../agencia_admin/paquetes.dat"
 
 // Guardar paquete
 int guardarPaquete(sqlite3 *db, Paquete p) {

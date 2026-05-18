@@ -218,3 +218,12 @@
 =======
 >>>>>>> branch 'master' of https://github.com/laurasaezserrano/serverAgencia4.git
 >>>>>>> branch 'master' of git@github.com:laurasaezserrano/serverAgencia4.git
+[2026-05-18 13:16:48] === Servidor arrancado ===
+[2026-05-18 13:16:48] === Servidor arrancado ===
+[2026-05-18 13:16:48] Base de datos abierta correctamente
+[2026-05-18 13:16:48] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 13:16:52] Cliente conectado desde 127.0.0.1
+[2026-05-18 13:17:02] OP recibida: LOG|Zaira|12345|
+[2026-05-18 13:17:11] Cliente solicito cierre (BYE)
+[2026-05-18 13:17:11] === Servidor cerrado ===
+[2026-05-18 13:17:11] === Servidor cerrado ===

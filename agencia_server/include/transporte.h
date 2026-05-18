@@ -13,10 +13,10 @@ typedef struct {
 } Transporte;
 
 void altaTransporte(sqlite3 *db);
-void bajaTransporte(void);
-void consultarTransporte(void);
-void asociarTransporte(void);
-void listadoTransportes(void);
+void bajaTransporte(sqlite3 *db);
+void consultarTransporte(sqlite3 *db);
+void asociarTransporte(sqlite3 *db);
+void listadoTransportes(sqlite3 *db);
 void menuTransporte(sqlite3 *db);
 
 #endif

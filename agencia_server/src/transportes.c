@@ -3,15 +3,37 @@
 #include "../include/transporte.h"
 
 
-void guardarTransporte(Transporte t) {
-    FILE *f = fopen(ARCHIVO, "ab");
-    if (f != NULL) {
-        fwrite(&t, sizeof(Transporte), 1, f);
-        fclose(f);
-    }
-}
+// GUARDAR TRANSPORTE EN SQLITE
+int guardarTransporte(sqlite3 *db, Transporte t) {
+    const char *sql =
+        "INSERT INTO transportes "
+        "(codigo, tipo, fecha_salida, fecha_llegada, id_paquete, activo) "
+        "VALUES (?, ?, ?, ?, ?, 1);";
 
-void altaTransporte(sqlite3 *db) { // hay que terminar todo lo de db y guardarlo ahi
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error preparando INSERT: %s\n", sqlite3_errmsg(db));
+        return 0;
+    }
+
+    sqlite3_bind_text(stmt, 1, t.codigo, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, t.tipo, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, t.fecha_salida, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 4, t.fecha_llegada, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, 5, t.cod_paquete);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        printf("Error al guardar transporte: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        return 0;
+    }
+
+    sqlite3_finalize(stmt);
+    return 1;
+}
+// ALTA
+void altaTransporte(sqlite3 *db) {
     Transporte t;
 
     printf("Codigo: ");
@@ -31,74 +53,86 @@ void altaTransporte(sqlite3 *db) { // hay que terminar todo lo de db y guardarlo
 
     t.activo = 1;
 
-    guardarTransporte(t);
-
-    printf("Transporte dado de alta correctamente.\n");
-
+    if (guardarTransporte(db, t)) {
+        printf("Transporte dado de alta correctamente.\n");
+    } else {
+        printf("Hubo un problema al guardar el transporte.\n");
+    }
 }
 
 
-void bajaTransporte(void) {
-    FILE *f = fopen(ARCHIVO, "rb+");
-    Transporte t;
+// BAJA LOGICA
+void bajaTransporte(sqlite3 *db) {
     char codigo[10];
-
-    if (f == NULL) return;
 
     printf("Codigo a dar de baja: ");
     scanf("%s", codigo);
 
-    while (fread(&t, sizeof(Transporte), 1, f)) {
-        if (strcmp(t.codigo, codigo) == 0 && t.activo == 1) {
-            t.activo = 0;
-            fseek(f, -sizeof(Transporte), SEEK_CUR);
-            fwrite(&t, sizeof(Transporte), 1, f);
-            printf("Transporte dado de baja.\n");
-            fclose(f);
-            return;
-        }
+    const char *sql =
+        "UPDATE transportes SET activo = 0 WHERE codigo = ? AND activo = 1;";
+
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error preparando UPDATE: %s\n", sqlite3_errmsg(db));
+        return;
     }
 
-    printf("No encontrado.\n");
-    fclose(f);
+    sqlite3_bind_text(stmt, 1, codigo, -1, SQLITE_TRANSIENT);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        printf("Error al dar de baja transporte: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+
+    if (sqlite3_changes(db) > 0) {
+        printf("Transporte dado de baja correctamente.\n");
+    } else {
+        printf("No encontrado.\n");
+    }
 }
 
 // CONSULTAR
-void consultarTransporte(void) {
-    FILE *f = fopen(ARCHIVO, "rb");
-    Transporte t;
+void consultarTransporte(sqlite3 *db) {
     char codigo[10];
-
-    if (f == NULL) return;
 
     printf("Codigo a consultar: ");
     scanf("%s", codigo);
 
-    while (fread(&t, sizeof(Transporte), 1, f)) {
-        if (strcmp(t.codigo, codigo) == 0 && t.activo == 1) {
-            printf("\n--- Transporte ---\n");
-            printf("Codigo: %s\n", t.codigo);
-            printf("Tipo: %s\n", t.tipo);
-            printf("Salida: %s\n", t.fecha_salida);
-            printf("Llegada: %s\n", t.fecha_llegada);
-            printf("Cod paquete: %d\n", t.cod_paquete);
-            fclose(f);
-            return;
-        }
+    const char *sql =
+        "SELECT codigo, tipo, fecha_salida, fecha_llegada, id_paquete "
+        "FROM transportes WHERE codigo = ? AND activo = 1;";
+
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error preparando SELECT: %s\n", sqlite3_errmsg(db));
+        return;
     }
 
-    printf("No encontrado.\n");
-    fclose(f);
+    sqlite3_bind_text(stmt, 1, codigo, -1, SQLITE_TRANSIENT);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        printf("\n--- Transporte ---\n");
+        printf("Codigo: %s\n", sqlite3_column_text(stmt, 0));
+        printf("Tipo: %s\n", sqlite3_column_text(stmt, 1));
+        printf("Salida: %s\n", sqlite3_column_text(stmt, 2));
+        printf("Llegada: %s\n", sqlite3_column_text(stmt, 3));
+        printf("Cod paquete: %d\n", sqlite3_column_int(stmt, 4));
+    } else {
+        printf("No encontrado.\n");
+    }
+
+    sqlite3_finalize(stmt);
 }
 
 // ASOCIAR TRANSPORTE A PAQUETE
-void asociarTransporte(void) {
-    FILE *f = fopen(ARCHIVO, "rb+");
-    Transporte t;
+void asociarTransporte(sqlite3 *db) {
     char codigo[10];
     int nuevoCod;
-
-    if (f == NULL) return;
 
     printf("Codigo transporte: ");
     scanf("%s", codigo);
@@ -106,44 +140,67 @@ void asociarTransporte(void) {
     printf("Nuevo codigo de paquete: ");
     scanf("%d", &nuevoCod);
 
-    while (fread(&t, sizeof(Transporte), 1, f)) {
-        if (strcmp(t.codigo, codigo) == 0 && t.activo == 1) {
-            t.cod_paquete = nuevoCod;
-            fseek(f, -sizeof(Transporte), SEEK_CUR);
-            fwrite(&t, sizeof(Transporte), 1, f);
-            printf("Asociacion realizada.\n");
-            fclose(f);
-            return;
-        }
+    const char *sql =
+        "UPDATE transportes SET id_paquete = ? WHERE codigo = ? AND activo = 1;";
+
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error preparando UPDATE: %s\n", sqlite3_errmsg(db));
+        return;
     }
 
-    printf("No encontrado.\n");
-    fclose(f);
+    sqlite3_bind_int(stmt, 1, nuevoCod);
+    sqlite3_bind_text(stmt, 2, codigo, -1, SQLITE_TRANSIENT);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        printf("Error al asociar transporte: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+
+    if (sqlite3_changes(db) > 0) {
+        printf("Asociacion realizada.\n");
+    } else {
+        printf("No encontrado.\n");
+    }
 }
 
-// LISTADO
-void listadoTransportes(void) {
-    FILE *f = fopen(ARCHIVO, "rb");
-    Transporte t;
 
-    if (f == NULL) {
-        printf("No hay transportes.\n");
+// LISTADO
+void listadoTransportes(sqlite3 *db) {
+    const char *sql =
+        "SELECT codigo, tipo, fecha_salida, fecha_llegada, id_paquete "
+        "FROM transportes WHERE activo = 1 ORDER BY codigo;";
+
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error preparando SELECT: %s\n", sqlite3_errmsg(db));
         return;
     }
 
     printf("\n--- LISTADO DE TRANSPORTES ---\n");
 
-    while (fread(&t, sizeof(Transporte), 1, f)) {
-        if (t.activo == 1) {
-            printf("\nCodigo: %s\n", t.codigo);
-            printf("Tipo: %s\n", t.tipo);
-            printf("Salida: %s\n", t.fecha_salida);
-            printf("Llegada: %s\n", t.fecha_llegada);
-            printf("Cod paquete: %d\n", t.cod_paquete);
-        }
+    int encontrados = 0;
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        encontrados = 1;
+
+        printf("\nCodigo: %s\n", sqlite3_column_text(stmt, 0));
+        printf("Tipo: %s\n", sqlite3_column_text(stmt, 1));
+        printf("Salida: %s\n", sqlite3_column_text(stmt, 2));
+        printf("Llegada: %s\n", sqlite3_column_text(stmt, 3));
+        printf("Cod paquete: %d\n", sqlite3_column_int(stmt, 4));
     }
 
-    fclose(f);
+    if (!encontrados) {
+        printf("No hay transportes registrados.\n");
+    }
+
+    sqlite3_finalize(stmt);
 }
 
 // MENU ADMIN

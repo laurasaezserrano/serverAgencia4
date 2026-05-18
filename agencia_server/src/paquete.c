@@ -80,87 +80,111 @@ void crearPaquete(sqlite3 *db) {
 
 // ELIMINAR (baja lógica)
 void eliminarPaquete(sqlite3 *db) {
-    FILE *f = fopen(ARCHIVO, "rb+");
-    Paquete p;
     int codigo;
-
-    if (f == NULL) return;
 
     printf("Codigo a eliminar: ");
     scanf("%d", &codigo);
 
-    while (fread(&p, sizeof(Paquete), 1, f)) {
-        if (p.cod == codigo && p.activo == 1) {
-            p.activo = 0;
-            fseek(f, -sizeof(Paquete), SEEK_CUR);
-            fwrite(&p, sizeof(Paquete), 1, f);
-            printf("Paquete eliminado.\n");
-            fclose(f);
-            return;
-        }
+    const char *sql =
+        "UPDATE paquetes SET activo = 0 WHERE codigo = ? AND activo = 1;";
+
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error preparando UPDATE: %s\n", sqlite3_errmsg(db));
+        return;
     }
 
-    printf("No encontrado.\n");
-    fclose(f);
+    sqlite3_bind_int(stmt, 1, codigo);
+
+    if (sqlite3_step(stmt) != SQLITE_DONE) {
+        printf("Error al eliminar paquete: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        return;
+    }
+
+    sqlite3_finalize(stmt);
+
+    if (sqlite3_changes(db) > 0) {
+        printf("Paquete eliminado correctamente.\n");
+    } else {
+        printf("No se encontro ningun paquete activo con ese codigo.\n");
+    }
 }
 
 // CONSULTAR
+// CONSULTAR PAQUETE EN SQLITE
 void consultarPaquete(sqlite3 *db) {
-    FILE *f = fopen(ARCHIVO, "rb");
-    Paquete p;
     int codigo;
-
-    if (f == NULL) return;
 
     printf("Codigo a consultar: ");
     scanf("%d", &codigo);
 
-    while (fread(&p, sizeof(Paquete), 1, f)) {
-        if (p.cod == codigo && p.activo == 1) {
-            printf("\n--- PAQUETE ---\n");
-            printf("Codigo: %d\n", p.cod);
-            printf("Nombre: %s\n", p.nombre);
-            printf("Precio: %.2f\n", p.precio);
-            printf("Origen: %s\n", p.cod_ciudad_origen);
-            printf("Destino: %s\n", p.cod_ciudad_destino);
-            printf("Plazas totales: %d\n", p.plazas_totales);
-            printf("Plazas disponibles: %d\n", p.plazas_disponibles);
-            fclose(f);
-            return;
-        }
+    const char *sql =
+        "SELECT codigo, nombre, precio, origen, destino, plazas_totales, plazas_disponibles "
+        "FROM paquetes WHERE codigo = ? AND activo = 1;";
+
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error preparando SELECT: %s\n", sqlite3_errmsg(db));
+        return;
     }
 
-    printf("No encontrado.\n");
-    fclose(f);
+    sqlite3_bind_int(stmt, 1, codigo);
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        printf("\n--- PAQUETE ---\n");
+        printf("Codigo: %d\n", sqlite3_column_int(stmt, 0));
+        printf("Nombre: %s\n", sqlite3_column_text(stmt, 1));
+        printf("Precio: %.2f\n", sqlite3_column_double(stmt, 2));
+        printf("Origen: %s\n", sqlite3_column_text(stmt, 3));
+        printf("Destino: %s\n", sqlite3_column_text(stmt, 4));
+        printf("Plazas totales: %d\n", sqlite3_column_int(stmt, 5));
+        printf("Plazas disponibles: %d\n", sqlite3_column_int(stmt, 6));
+    } else {
+        printf("No encontrado.\n");
+    }
+
+    sqlite3_finalize(stmt);
 }
 
 // LISTADO
+// LISTADO DE PAQUETES EN SQLITE
 void listadoPaquetes(sqlite3 *db) {
-    FILE *f = fopen(ARCHIVO, "rb");
-    Paquete p;
+    const char *sql =
+        "SELECT codigo, nombre, precio, origen, destino, plazas_totales, plazas_disponibles "
+        "FROM paquetes WHERE activo = 1 ORDER BY codigo;";
 
-    if (f == NULL) {
-        printf("No hay paquetes.\n");
+    sqlite3_stmt *stmt;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error preparando SELECT: %s\n", sqlite3_errmsg(db));
         return;
     }
 
     printf("\n--- LISTADO DE PAQUETES ---\n");
 
-    while (fread(&p, sizeof(Paquete), 1, f)) {
-        if (p.activo == 1) {
-            printf("\nCodigo: %d\n", p.cod);
-            printf("Nombre: %s\n", p.nombre);
-            printf("Precio: %.2f\n", p.precio);
-            printf("Origen: %s\n", p.cod_ciudad_origen);
-            printf("Destino: %s\n", p.cod_ciudad_destino);
-            printf("Plazas totales: %d\n", p.plazas_totales);
-            printf("Plazas disponibles: %d\n", p.plazas_disponibles);
-        }
+    int encontrados = 0;
+
+    while (sqlite3_step(stmt) == SQLITE_ROW) {
+        encontrados = 1;
+
+        printf("\nCodigo: %d\n", sqlite3_column_int(stmt, 0));
+        printf("Nombre: %s\n", sqlite3_column_text(stmt, 1));
+        printf("Precio: %.2f\n", sqlite3_column_double(stmt, 2));
+        printf("Origen: %s\n", sqlite3_column_text(stmt, 3));
+        printf("Destino: %s\n", sqlite3_column_text(stmt, 4));
+        printf("Plazas totales: %d\n", sqlite3_column_int(stmt, 5));
+        printf("Plazas disponibles: %d\n", sqlite3_column_int(stmt, 6));
     }
 
-    fclose(f);
-}
+    if (!encontrados) {
+        printf("No hay paquetes registrados.\n");
+    }
 
+    sqlite3_finalize(stmt);
+}
 // MENU ADMIN
 void menuPaquetes(sqlite3 *db) {
     int opcion;

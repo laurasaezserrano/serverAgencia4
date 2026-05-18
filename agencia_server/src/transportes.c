@@ -242,8 +242,8 @@ void menuTransporte_cliente(sqlite3 *db) {
         scanf("%d", &opcion);
 
         switch (opcion) {
-            case 1: consultarTransporte(); break;
-            case 2: listadoTransportes(); break;
+            case 1: consultarTransporte(db); break;
+            case 2: listadoTransportes(db); break;
         }
 
     } while (opcion != 0);

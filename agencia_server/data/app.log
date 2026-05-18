@@ -145,4 +145,23 @@
 [2026-05-18 11:21:25] Cliente conectado desde 127.0.0.1
 [2026-05-18 11:21:32] OP recibida: LOG|admin|1234|
 [2026-05-18 11:21:39] OP recibida: LPQ|
+<<<<<<< HEAD
+[2026-05-18 12:00:14] === Servidor arrancado ===
+[2026-05-18 12:00:14] === Servidor arrancado ===
+[2026-05-18 12:00:14] Base de datos abierta correctamente
+[2026-05-18 12:00:14] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 12:00:17] Cliente conectado desde 127.0.0.1
+[2026-05-18 12:00:26] OP recibida: LOG|admin|1234|
+[2026-05-18 12:01:33] OP recibida: GCL|11111111|
+[2026-05-18 12:01:40] OP recibida: LPQ|
+[2026-05-18 12:09:11] === Servidor arrancado ===
+[2026-05-18 12:09:11] === Servidor arrancado ===
+[2026-05-18 12:09:11] Base de datos abierta correctamente
+[2026-05-18 12:09:11] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 12:09:30] Cliente conectado desde 127.0.0.1
+[2026-05-18 12:10:53] OP recibida: LOG|admin|1234|
+[2026-05-18 12:11:09] OP recibida: GCL|11111111|
+[2026-05-18 12:11:20] OP recibida: LCL|
+=======
 >>>>>>> branch 'master' of https://github.com/laurasaezserrano/serverAgencia4.git
+>>>>>>> branch 'master' of git@github.com:laurasaezserrano/serverAgencia4.git

@@ -125,8 +125,8 @@ int db_crear_tablas(sqlite3 *db) {
         printf("Error preparando INSERT admin: %s\n", sqlite3_errmsg(db));
         return 1;
     }
-    sqlite3_bind_text(stmt, 1, "admin",      -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, hash_admin,   -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, "admin",      -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, hash_admin,   -1, SQLITE_TRANSIENT);
     sqlite3_step(stmt);
     sqlite3_finalize(stmt);
 

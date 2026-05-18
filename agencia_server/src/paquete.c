@@ -22,10 +22,10 @@ int guardarPaquete(sqlite3 *db, Paquete p) {
 
     // Asignar valores
     sqlite3_bind_int(stmt,    1, p.cod);
-    sqlite3_bind_text(stmt,   2, p.nombre, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt,   2, p.nombre, -1, SQLITE_TRANSIENT);
     sqlite3_bind_double(stmt, 3, p.precio);
-    sqlite3_bind_text(stmt,   4, p.cod_ciudad_origen, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt,   5, p.cod_ciudad_destino, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt,   4, p.cod_ciudad_origen, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt,   5, p.cod_ciudad_destino, -1, SQLITE_TRANSIENT);
     sqlite3_bind_int(stmt,    6, p.plazas_totales);
     sqlite3_bind_int(stmt,    7, p.plazas_disponibles);
 
@@ -237,10 +237,10 @@ void importar_paquetes_dat(sqlite3 *db) {
         if (p.activo != 1) continue;  // saltar los dados de baja
 
         sqlite3_bind_int(stmt,    1, p.cod);
-        sqlite3_bind_text(stmt,   2, p.nombre,            -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt,   2, p.nombre,            -1, SQLITE_TRANSIENT);
         sqlite3_bind_double(stmt, 3, (double)p.precio);
-        sqlite3_bind_text(stmt,   4, p.cod_ciudad_origen,  -1, SQLITE_STATIC);
-        sqlite3_bind_text(stmt,   5, p.cod_ciudad_destino, -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt,   4, p.cod_ciudad_origen,  -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt,   5, p.cod_ciudad_destino, -1, SQLITE_TRANSIENT);
         sqlite3_bind_int(stmt,    6, p.plazas_totales);
         sqlite3_bind_int(stmt,    7, p.plazas_disponibles);
 

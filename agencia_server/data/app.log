@@ -92,3 +92,13 @@
 [2026-05-18 10:19:00] OP recibida: LOG|Zaira|12345|
 [2026-05-18 10:19:06] OP recibida: GCL|3|
 [2026-05-18 10:19:21] OP recibida: LPQ|
+[2026-05-18 10:24:18] === Servidor arrancado ===
+[2026-05-18 10:24:18] === Servidor arrancado ===
+[2026-05-18 10:24:18] Base de datos abierta correctamente
+[2026-05-18 10:24:18] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 10:24:28] Cliente conectado desde 127.0.0.1
+[2026-05-18 10:24:34] OP recibida: LOG|admin|1234|
+[2026-05-18 10:24:47] OP recibida: GCL|1|
+[2026-05-18 10:25:05] Cliente desconectado
+[2026-05-18 10:25:05] === Servidor cerrado ===
+[2026-05-18 10:25:05] === Servidor cerrado ===

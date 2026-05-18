@@ -3,6 +3,7 @@
 #include "../include/alojamiento.h"
 #include "../include/sqlite3.h"
 
+
 // GUARDAR ALOJAMIENTO EN SQLITE
 int guardarAlojamiento(sqlite3 *db, Alojamiento a) {
     const char *sql =

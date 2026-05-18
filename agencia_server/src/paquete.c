@@ -2,7 +2,6 @@
 #include <string.h>
 #include "../include/paquete.h"
 
-
 // Guardar paquete
 int guardarPaquete(sqlite3 *db, Paquete p) {
 
@@ -234,48 +233,3 @@ void menuPaquetes_cliente(sqlite3 *db) {
 }
 
 
-void importar_paquetes_dat(sqlite3 *db) {
-    FILE *f = fopen(ARCHIVO, "rb");
-    if (f == NULL) {
-        printf("No se encontro paquetes.dat\n");
-        return;
-    }
-
-    const char *sql =
-        "INSERT OR IGNORE INTO paquetes "
-        "(codigo, nombre, precio, origen, destino, plazas_totales, plazas_disponibles, activo) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, 1);";
-
-    sqlite3_stmt *stmt;
-    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
-        printf("Error preparando INSERT: %s\n", sqlite3_errmsg(db));
-        fclose(f);
-        return;
-    }
-
-    Paquete p;
-    int importados = 0;
-
-    while (fread(&p, sizeof(Paquete), 1, f)) {
-        if (p.activo != 1) continue;  // saltar los dados de baja
-
-        sqlite3_bind_int(stmt,    1, p.cod);
-        sqlite3_bind_text(stmt,   2, p.nombre,            -1, SQLITE_TRANSIENT);
-        sqlite3_bind_double(stmt, 3, (double)p.precio);
-        sqlite3_bind_text(stmt,   4, p.cod_ciudad_origen,  -1, SQLITE_TRANSIENT);
-        sqlite3_bind_text(stmt,   5, p.cod_ciudad_destino, -1, SQLITE_TRANSIENT);
-        sqlite3_bind_int(stmt,    6, p.plazas_totales);
-        sqlite3_bind_int(stmt,    7, p.plazas_disponibles);
-
-        if (sqlite3_step(stmt) == SQLITE_DONE)
-            importados++;
-        else
-            printf("Error insertando paquete %d: %s\n", p.cod, sqlite3_errmsg(db));
-
-        sqlite3_reset(stmt);  // resetear para la siguiente fila
-    }
-
-    sqlite3_finalize(stmt);
-    fclose(f);
-    printf("%d paquetes importados correctamente.\n", importados);
-}

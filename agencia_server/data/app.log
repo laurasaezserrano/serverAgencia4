@@ -188,3 +188,17 @@
 [2026-05-18 13:06:37] Cliente desconectado
 [2026-05-18 13:06:37] === Servidor cerrado ===
 [2026-05-18 13:06:37] === Servidor cerrado ===
+[2026-05-18 13:08:14] === Servidor arrancado ===
+[2026-05-18 13:08:14] === Servidor arrancado ===
+[2026-05-18 13:08:14] Base de datos abierta correctamente
+[2026-05-18 13:08:14] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 13:08:17] Cliente conectado desde 127.0.0.1
+[2026-05-18 13:08:25] OP recibida: LOG|admin|1234|
+[2026-05-18 13:10:43] OP recibida: IDS|
+[2026-05-18 13:15:21] === Servidor arrancado ===
+[2026-05-18 13:15:21] === Servidor arrancado ===
+[2026-05-18 13:15:21] Base de datos abierta correctamente
+[2026-05-18 13:15:21] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 13:15:25] Cliente conectado desde 127.0.0.1
+[2026-05-18 13:15:32] OP recibida: LOG|admin|1234|
+[2026-05-18 13:15:47] OP recibida: IDS|

@@ -277,9 +277,9 @@ static void handle_REG(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, usuario,    -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, hash_clave, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, rol,        -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, usuario,    -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, hash_clave, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, rol,        -1, SQLITE_TRANSIENT);
 
     if (sqlite3_step(stmt) == SQLITE_DONE) {
         char logmsg[128];
@@ -311,8 +311,8 @@ static void handle_LOG(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, usuario,    -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, hash_clave, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, usuario,    -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, hash_clave, -1, SQLITE_TRANSIENT);
 
     char resp[PROTO_BUF];
     if (sqlite3_step(stmt) == SQLITE_ROW) {
@@ -349,12 +349,12 @@ static void handle_ACL(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, dni,       -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, nombre,    -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, apellidos, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 4, tlf,       -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 5, email,     -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 6, fnac,      -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, dni,       -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, nombre,    -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, apellidos, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 4, tlf,       -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 5, email,     -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 6, fnac,      -1, SQLITE_TRANSIENT);
 
     if (sqlite3_step(stmt) == SQLITE_DONE) {
         enviar_respuesta(s, "OK|Cliente dado de alta|#");
@@ -375,7 +375,7 @@ static void handle_BCL(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_TRANSIENT);
     sqlite3_step(stmt);
     int cambios = sqlite3_changes(db);
     sqlite3_finalize(stmt);
@@ -411,12 +411,12 @@ static void handle_MCL(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, nombre,    -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, apellidos, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, tlf,       -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 4, email,     -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 5, fnac,      -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 6, dni,       -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, nombre,    -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, apellidos, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, tlf,       -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 4, email,     -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 5, fnac,      -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 6, dni,       -1, SQLITE_TRANSIENT);
 
     sqlite3_step(stmt);
     int cambios = sqlite3_changes(db);
@@ -441,7 +441,7 @@ static void handle_GCL(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_TRANSIENT);
 
     char resp[PROTO_BUF];
     if (sqlite3_step(stmt) == SQLITE_ROW) {
@@ -582,10 +582,10 @@ static void handle_APQ(SOCKET s, sqlite3 *db, char *params) {
     int    plz = atoi(plazas);
     double prc = atof(precio);
     sqlite3_bind_int(stmt,    1, atoi(cod));
-    sqlite3_bind_text(stmt,   2, nombre,  -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt,   2, nombre,  -1, SQLITE_TRANSIENT);
     sqlite3_bind_double(stmt, 3, prc);
-    sqlite3_bind_text(stmt,   4, origen,  -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt,   5, destino, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt,   4, origen,  -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt,   5, destino, -1, SQLITE_TRANSIENT);
     sqlite3_bind_int(stmt,    6, plz);
     sqlite3_bind_int(stmt,    7, plz);
 
@@ -653,7 +653,7 @@ static void handle_GAL(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_TRANSIENT);
 
     char resp[PROTO_BUF];
     if (sqlite3_step(stmt) == SQLITE_ROW) {
@@ -693,11 +693,11 @@ static void handle_AAL(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, cod,      -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, nombre,   -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, dir,      -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 4, tipo,     -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 5, cod_city, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, cod,      -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, nombre,   -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, dir,      -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 4, tipo,     -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 5, cod_city, -1, SQLITE_TRANSIENT);
 
     if (sqlite3_step(stmt) == SQLITE_DONE) {
         enviar_respuesta(s, "OK|Alojamiento dado de alta|#");
@@ -718,7 +718,7 @@ static void handle_BAL(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_TRANSIENT);
     sqlite3_step(stmt);
     int cambios = sqlite3_changes(db);
     sqlite3_finalize(stmt);
@@ -780,10 +780,10 @@ static void handle_ATR(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, cod,        -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, tipo,       -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, f_salida,   -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 4, f_llegada,  -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, cod,        -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, tipo,       -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, f_salida,   -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 4, f_llegada,  -1, SQLITE_TRANSIENT);
     sqlite3_bind_int (stmt, 5, atoi(id_paquete));
 
     if (sqlite3_step(stmt) == SQLITE_DONE) {
@@ -805,7 +805,7 @@ static void handle_BTR(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_TRANSIENT);
     sqlite3_step(stmt);
     int cambios = sqlite3_changes(db);
     sqlite3_finalize(stmt);
@@ -861,9 +861,9 @@ static void handle_ARE(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, dni,     -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, dni,     -1, SQLITE_TRANSIENT);
     sqlite3_bind_int(stmt,  2, atoi(cod_pqt));
-    sqlite3_bind_text(stmt, 3, fecha,   -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 3, fecha,   -1, SQLITE_TRANSIENT);
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
         sqlite3_finalize(stmt);
@@ -936,7 +936,7 @@ static void handle_LRC(SOCKET s, sqlite3 *db, char *params) {
         enviar_respuesta(s, "ERR|Error interno BD|#");
         return;
     }
-    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, params, -1, SQLITE_TRANSIENT);
 
     enviar_respuesta(s, "LST_BEGIN|#");
     char fila[PROTO_BUF];

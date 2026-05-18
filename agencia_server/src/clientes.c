@@ -117,12 +117,12 @@ int alta_cliente(sqlite3 *db) {
         return 1;
     }
 
-    sqlite3_bind_text(stmt, 1, c.dni, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, c.nombre, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, c.apellidos, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 4, c.telefono, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 5, c.email, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 6, c.fecha_nacimiento, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, c.dni, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, c.nombre, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, c.apellidos, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 4, c.telefono, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 5, c.email, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 6, c.fecha_nacimiento, -1, SQLITE_TRANSIENT);
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
         printf("Error insertando cliente: %s\n", sqlite3_errmsg(db));
@@ -153,7 +153,7 @@ int baja_cliente(sqlite3 *db) {
 	        return 1;
 	    }
 
-	    sqlite3_bind_text(stmt, 1, dni, -1, SQLITE_STATIC);
+	    sqlite3_bind_text(stmt, 1, dni, -1, SQLITE_TRANSIENT);
 
 	    if (sqlite3_step(stmt) == SQLITE_ROW) {
 	        activo = sqlite3_column_int(stmt, 0);
@@ -177,7 +177,7 @@ int baja_cliente(sqlite3 *db) {
 	        return 1;
 	    }
 
-	    sqlite3_bind_text(stmt, 1, dni, -1, SQLITE_STATIC);
+	    sqlite3_bind_text(stmt, 1, dni, -1, SQLITE_TRANSIENT);
 
 	    if (sqlite3_step(stmt) != SQLITE_DONE) {
 	        printf("Error al dar de baja al cliente: %s\n", sqlite3_errmsg(db));
@@ -237,12 +237,12 @@ int modificar_cliente(sqlite3 *db) {
         return 1;
     }
 
-    sqlite3_bind_text(stmt, 1, c.nombre, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 2, c.apellidos, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 3, c.telefono, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 4, c.email, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 5, c.fecha_nacimiento, -1, SQLITE_STATIC);
-    sqlite3_bind_text(stmt, 6, c.dni, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, c.nombre, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, c.apellidos, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 3, c.telefono, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 4, c.email, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 5, c.fecha_nacimiento, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 6, c.dni, -1, SQLITE_TRANSIENT);
 
     if (sqlite3_step(stmt) != SQLITE_DONE) {
         printf("Error modificando cliente: %s\n", sqlite3_errmsg(db));
@@ -441,7 +441,7 @@ static int existe_cliente_dni(sqlite3 *db, const char *dni) {
         return 0;
     }
 
-    sqlite3_bind_text(stmt, 1, dni, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, dni, -1, SQLITE_TRANSIENT);
 
     if (sqlite3_step(stmt) == SQLITE_ROW) {
         existe = sqlite3_column_int(stmt, 0);
@@ -462,7 +462,7 @@ static int obtener_cliente_por_dni(sqlite3 *db, const char *dni, Cliente *c) {
         return 0;
     }
 
-    sqlite3_bind_text(stmt, 1, dni, -1, SQLITE_STATIC);
+    sqlite3_bind_text(stmt, 1, dni, -1, SQLITE_TRANSIENT);
 
     if (sqlite3_step(stmt) == SQLITE_ROW) {
         c->id = sqlite3_column_int(stmt, 0);

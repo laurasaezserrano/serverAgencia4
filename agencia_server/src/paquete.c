@@ -5,28 +5,45 @@
 #define ARCHIVO "../agencia_admin/paquetes.dat"
 
 // Guardar paquete
-int guardarPaquete(Paquete p) {
+int guardarPaquete(sqlite3 *db, Paquete p) {
 
-    // Abrimos en modo "ab" (append binary) para añadir al final
-    FILE *f = fopen(ARCHIVO, "ab");
+    const char *sql =
+        "INSERT INTO paquetes "
+        "(codigo, nombre, precio, origen, destino, plazas_totales, plazas_disponibles, activo) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, 1);";
 
-    if (f == NULL) {
-    	printf("Error: No se pudo abrir el archivo %s para guardar.\n", ARCHIVO);
-        return 0; // Fallo
+    sqlite3_stmt *stmt;
+
+    // Preparar consulta
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, NULL) != SQLITE_OK) {
+        printf("Error al preparar INSERT: %s\n", sqlite3_errmsg(db));
+        return 0;
     }
 
-    // fwrite devuelve el número de elementos escritos correctamente
-    size_t escritos = fwrite(&p, sizeof(Paquete), 1, f);
+    // Asignar valores
+    sqlite3_bind_int(stmt,    1, p.cod);
+    sqlite3_bind_text(stmt,   2, p.nombre, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_double(stmt, 3, p.precio);
+    sqlite3_bind_text(stmt,   4, p.cod_ciudad_origen, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt,   5, p.cod_ciudad_destino, -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt,    6, p.plazas_totales);
+    sqlite3_bind_int(stmt,    7, p.plazas_disponibles);
 
-    fclose(f);
+    // Ejecutar INSERT
+    int rc = sqlite3_step(stmt);
 
-    if (escritos == 1) {
-        return 1; // Éxito
-    } else {
-        printf("Error: Fallo al escribir los datos en el disco.\n");
-        return 0; // Fallo
+    if (rc != SQLITE_DONE) {
+        printf("Error al guardar paquete: %s\n", sqlite3_errmsg(db));
+        sqlite3_finalize(stmt);
+        return 0;
     }
+
+    sqlite3_finalize(stmt);
+
+    return 1;
 }
+
+
 
 // CREAR
 void crearPaquete(sqlite3 *db) {
@@ -53,7 +70,7 @@ void crearPaquete(sqlite3 *db) {
     p.plazas_disponibles = p.plazas_totales;
     p.activo = 1;
 
-    if (guardarPaquete(p)) {
+    if (guardarPaquete(db, p)) {
         printf("Paquete guardado correctamente.\n");
     } else {
         printf("Hubo un problema al guardar el paquete. Inténtelo de nuevo.\n");
@@ -220,10 +237,10 @@ void importar_paquetes_dat(sqlite3 *db) {
         if (p.activo != 1) continue;  // saltar los dados de baja
 
         sqlite3_bind_int(stmt,    1, p.cod);
-        sqlite3_bind_text(stmt,   2, p.nombre,            -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt,   2, p.nombre,            -1, SQLITE_TRANSIENT);
         sqlite3_bind_double(stmt, 3, (double)p.precio);
-        sqlite3_bind_text(stmt,   4, p.cod_ciudad_origen,  -1, SQLITE_STATIC);
-        sqlite3_bind_text(stmt,   5, p.cod_ciudad_destino, -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt,   4, p.cod_ciudad_origen,  -1, SQLITE_TRANSIENT);
+        sqlite3_bind_text(stmt,   5, p.cod_ciudad_destino, -1, SQLITE_TRANSIENT);
         sqlite3_bind_int(stmt,    6, p.plazas_totales);
         sqlite3_bind_int(stmt,    7, p.plazas_disponibles);
 

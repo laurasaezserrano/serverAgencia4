@@ -134,7 +134,7 @@ void Menu::menuPrincipal() {
         std::cout << " 1. Mi perfil\n";
         std::cout << " 2. Mis reservas\n";
         std::cout << " 3. Paquetes turisticos\n";
-        if (m_rolActual == "ADMIN") {
+        if (m_rolActual == "admin") {
             std::cout << " 4. Gestion de clientes\n";
             std::cout << " 5. Informes\n";
         }
@@ -146,8 +146,8 @@ void Menu::menuPrincipal() {
             case 1: menuPerfil();   break;
             case 2: menuReservas(); break;
             case 3: menuPaquetes(); break;
-            case 4: if (m_rolActual == "ADMIN") menuPrincipalClientes(); break;
-            case 5: if (m_rolActual == "ADMIN") menuInformes(); break;
+            case 4: if (m_rolActual == "admin") menuPrincipalClientes(); break;
+            case 5: if (m_rolActual == "admin") menuInformes(); break;
             case 0: return;
             default: std::cout << "Opcion no valida.\n"; pausar();
         }
@@ -228,7 +228,7 @@ void Menu::menuPaquetes() {
         titulo("PAQUETES TURISTICOS");
         std::cout << " 1. Ver paquetes disponibles\n";
         std::cout << " 2. Hacer una reserva\n";
-        if (m_rolActual == "ADMIN") {
+        if (m_rolActual == "admin") {
             std::cout << " 3. Nuevo paquete\n";
             std::cout << " 4. Eliminar paquete\n";
         }
@@ -240,8 +240,8 @@ void Menu::menuPaquetes() {
             case 0: return;
             case 1: listarPaquetes(); break;
             case 2: crearReserva();   break;
-            case 3: if (m_rolActual == "ADMIN") crearPaquete(); break;
-            case 4: if (m_rolActual == "ADMIN") bajaPaquete();  break;
+            case 3: if (m_rolActual == "admin") crearPaquete(); break;
+            case 4: if (m_rolActual == "admin") bajaPaquete();  break;
             default: std::cout << "Opcion no valida.\n"; pausar();
         }
     }

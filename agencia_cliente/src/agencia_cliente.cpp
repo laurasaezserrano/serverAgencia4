@@ -32,7 +32,7 @@ static void cargarConfig(const std::string& ruta,
 int main() {
     std::string host;
     int puerto;
-    cargarConfig("data/config.ini", host, puerto);
+    cargarConfig("../agencia_admin/data/config.ini", host, puerto);
 
     std::cout << "=== Agencia de Viajes — Cliente ===\n\n";
     std::cout << "Conectando a " << host << ":" << puerto << " ...\n";

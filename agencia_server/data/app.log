@@ -15,6 +15,7 @@
 [2026-05-17 17:31:17] Cliente conectado desde 127.0.0.1
 [2026-05-17 17:31:24] OP recibida: LOG|admin|1234|
 [2026-05-17 17:31:28] OP recibida: LPQ|
+<<<<<<< HEAD
 [2026-05-17 19:19:02] === Servidor arrancado ===
 [2026-05-17 19:19:02] === Servidor arrancado ===
 [2026-05-17 19:19:02] Base de datos abierta correctamente
@@ -44,3 +45,104 @@
 [2026-05-17 19:31:14] OP recibida: LOG|admin|admin|
 [2026-05-17 19:31:29] OP recibida: LOG|admin|1234|
 [2026-05-17 19:31:38] OP recibida: GCL|2|
+=======
+[2026-05-18 09:51:40] === Servidor arrancado ===
+[2026-05-18 09:51:40] === Servidor arrancado ===
+[2026-05-18 09:51:40] Base de datos abierta correctamente
+[2026-05-18 09:51:40] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 09:51:59] Cliente conectado desde 127.0.0.1
+[2026-05-18 09:53:12] Cliente desconectado
+[2026-05-18 09:53:12] === Servidor cerrado ===
+[2026-05-18 09:53:12] === Servidor cerrado ===
+[2026-05-18 09:53:19] === Servidor arrancado ===
+[2026-05-18 09:53:19] === Servidor arrancado ===
+[2026-05-18 09:53:19] Base de datos abierta correctamente
+[2026-05-18 09:53:19] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 09:53:32] Cliente conectado desde 127.0.0.1
+[2026-05-18 09:55:22] OP recibida: LOG|admin|1234|
+[2026-05-18 09:56:25] Cliente desconectado
+[2026-05-18 09:56:25] === Servidor cerrado ===
+[2026-05-18 09:56:25] === Servidor cerrado ===
+[2026-05-18 09:56:31] === Servidor arrancado ===
+[2026-05-18 09:56:31] === Servidor arrancado ===
+[2026-05-18 09:56:31] Base de datos abierta correctamente
+[2026-05-18 09:56:31] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 09:56:33] Cliente conectado desde 127.0.0.1
+[2026-05-18 09:57:19] Cliente desconectado
+[2026-05-18 09:57:19] === Servidor cerrado ===
+[2026-05-18 09:57:19] === Servidor cerrado ===
+[2026-05-18 09:57:23] === Servidor arrancado ===
+[2026-05-18 09:57:23] === Servidor arrancado ===
+[2026-05-18 09:57:23] Base de datos abierta correctamente
+[2026-05-18 09:57:23] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 09:57:26] Cliente conectado desde 127.0.0.1
+[2026-05-18 09:57:32] OP recibida: LOG|carmen|1234|
+[2026-05-18 10:02:20] Cliente desconectado
+[2026-05-18 10:02:20] === Servidor cerrado ===
+[2026-05-18 10:02:20] === Servidor cerrado ===
+[2026-05-18 10:09:41] === Servidor arrancado ===
+[2026-05-18 10:09:41] === Servidor arrancado ===
+[2026-05-18 10:09:41] Base de datos abierta correctamente
+[2026-05-18 10:09:41] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 10:09:56] Cliente conectado desde 127.0.0.1
+[2026-05-18 10:10:15] Cliente desconectado
+[2026-05-18 10:10:15] === Servidor cerrado ===
+[2026-05-18 10:10:15] === Servidor cerrado ===
+[2026-05-18 10:11:17] === Servidor arrancado ===
+[2026-05-18 10:11:17] === Servidor arrancado ===
+[2026-05-18 10:11:17] Base de datos abierta correctamente
+[2026-05-18 10:11:17] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 10:11:22] Cliente conectado desde 127.0.0.1
+[2026-05-18 10:12:19] OP recibida: LOG|admin|1234|
+[2026-05-18 10:12:33] Cliente desconectado
+[2026-05-18 10:12:33] === Servidor cerrado ===
+[2026-05-18 10:12:33] === Servidor cerrado ===
+[2026-05-18 10:12:40] === Servidor arrancado ===
+[2026-05-18 10:12:40] === Servidor arrancado ===
+[2026-05-18 10:12:40] Base de datos abierta correctamente
+[2026-05-18 10:12:40] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 10:12:44] Cliente conectado desde 127.0.0.1
+[2026-05-18 10:12:59] OP recibida: REG|Zaira|12345|CLIENTE|
+[2026-05-18 10:12:59] Nuevo usuario registrado: Zaira [CLIENTE]
+[2026-05-18 10:13:13] OP recibida: LOG|Zaira|12345|
+[2026-05-18 10:15:50] OP recibida: LPQ|
+[2026-05-18 10:16:47] === Servidor arrancado ===
+[2026-05-18 10:16:47] === Servidor arrancado ===
+[2026-05-18 10:16:47] Base de datos abierta correctamente
+[2026-05-18 10:16:47] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 10:16:51] Cliente conectado desde 127.0.0.1
+[2026-05-18 10:17:02] OP recibida: LOG|Zaira|12345|
+[2026-05-18 10:17:50] OP recibida: GCL|000000000|
+[2026-05-18 10:18:34] OP recibida: LRC|3|
+[2026-05-18 10:18:40] OP recibida: GCL|3|
+[2026-05-18 10:18:49] === Servidor arrancado ===
+[2026-05-18 10:18:49] === Servidor arrancado ===
+[2026-05-18 10:18:49] Base de datos abierta correctamente
+[2026-05-18 10:18:49] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 10:18:52] Cliente conectado desde 127.0.0.1
+[2026-05-18 10:19:00] OP recibida: LOG|Zaira|12345|
+[2026-05-18 10:19:06] OP recibida: GCL|3|
+[2026-05-18 10:19:21] OP recibida: LPQ|
+[2026-05-18 11:10:18] === Servidor arrancado ===
+[2026-05-18 11:10:18] === Servidor arrancado ===
+[2026-05-18 11:10:18] Base de datos abierta correctamente
+[2026-05-18 11:10:18] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 11:10:22] Cliente conectado desde 127.0.0.1
+[2026-05-18 11:10:28] OP recibida: LOG|admin|1234|
+[2026-05-18 11:10:36] OP recibida: LPQ|
+[2026-05-18 11:15:17] === Servidor arrancado ===
+[2026-05-18 11:15:17] === Servidor arrancado ===
+[2026-05-18 11:15:17] Base de datos abierta correctamente
+[2026-05-18 11:15:17] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 11:15:19] Cliente conectado desde 127.0.0.1
+[2026-05-18 11:15:26] OP recibida: LOG|admin|1234|
+[2026-05-18 11:15:45] OP recibida: APQ|11|Visita por España|200|Madrid|Barcelona|50|
+[2026-05-18 11:16:30] OP recibida: LPQ|
+[2026-05-18 11:21:22] === Servidor arrancado ===
+[2026-05-18 11:21:22] === Servidor arrancado ===
+[2026-05-18 11:21:22] Base de datos abierta correctamente
+[2026-05-18 11:21:22] Escuchando en puerto 8080... (esperando cliente)
+[2026-05-18 11:21:25] Cliente conectado desde 127.0.0.1
+[2026-05-18 11:21:32] OP recibida: LOG|admin|1234|
+[2026-05-18 11:21:39] OP recibida: LPQ|
+>>>>>>> branch 'master' of https://github.com/laurasaezserrano/serverAgencia4.git
